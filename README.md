@@ -3,7 +3,7 @@
 Tässä git repositoryssä sijaitsee SCI24-ryhmän prototyyppi kurssille
 SCI-C1000 - SCI-Projektikurssi
 
-Suunnitelma -
+## Suunnitelma ##
 
 Tehdään tosi simppeli keksusteluserveri joka pistetään localhostiin pyörii.
 
@@ -14,21 +14,21 @@ Clientit on hyvin yksinkertaisia lohkoketjun luojia.
 Clientille UI
 
 
-Setup:
+## Setup ##
 
 UI:ssa käytetty REMI-kirjastoa (https://github.com/dddomodossola/remi),
 jonka riippuvuutena pywebview(https://github.com/r0x0r/pywebview) (ehkä?)
 
-Asennus
+## Asennus ##
 pip install git+https://github.com/dddomodossola/remi.git
 
-Windowsilla:
+### Windowsilla: ###
   pip install pywebview[winforms]
 
-Mac:
+### Mac: ###
   pip install pywebview[cocoa]
 
-Linux:
+### Linux: ###
   pip install pywebview[gtk3
 
 Käynnistä UI komennolla python UI.py kun olet oikeassa kansiossa
