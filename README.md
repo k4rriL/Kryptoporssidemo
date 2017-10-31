@@ -20,15 +20,15 @@ UI:ssa käytetty REMI-kirjastoa (https://github.com/dddomodossola/remi),
 jonka riippuvuutena pywebview(https://github.com/r0x0r/pywebview) (ehkä?)
 
 ## Asennus ##
-pip install git+https://github.com/dddomodossola/remi.git
+`pip install git+https://github.com/dddomodossola/remi.git`
 
 ### Windowsilla: ###
-  pip install pywebview[winforms]
+  `pip install pywebview[winforms]`
 
 ### Mac: ###
-  pip install pywebview[cocoa]
+  `pip install pywebview[cocoa]`
 
 ### Linux: ###
-  pip install pywebview[gtk3
+  `pip install pywebview[gtk3]`
 
-Käynnistä UI komennolla python UI.py kun olet oikeassa kansiossa
+Käynnistä UI komennolla `python UI.py` kun olet oikeassa kansiossa
