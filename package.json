@@ -1,0 +1,19 @@
+{
+  "name": "crypto_exchange",
+  "version": "0.0.1",
+  "description": "Tässä git repositoryssä sijaitsee SCI24-ryhmän prototyyppi kurssille SCI-C1000 - SCI-Projektikurssi",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@version.aalto.fi:lehtirk1/SCI24-kryptoporssidemo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
