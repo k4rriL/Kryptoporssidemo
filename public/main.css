@@ -1,3 +1,42 @@
 .main-container {
   background: #E6E6E6;
+  border-radius: 6px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  margin: auto;
+  margin-top: 15px;
+}
+
+.stocks-title {
+  text-align: center;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.header {
+  display: block;
+  width: 100%;
+}
+
+h2 {
+  text-transform: uppercase;
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  padding: 10px 20px;
+  border-bottom: 1px solid #c6c6c6;
+  text-align: center;
+}
+
+tr:nth-child(1) > td {
+  background-color: #b3b3b3;
+}
+
+tr:nth-child(1) {
+  width: 100%;
 }

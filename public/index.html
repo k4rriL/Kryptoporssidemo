@@ -1,24 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" ng-app="cryptoExchange">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+    <script src="public/core.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link href="public/main.css" rel="stylesheet">
 
     <title>Kryptopörssi</title>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-
-    <!-- Custom styles for this template -->
-    <link href="main.css" rel="stylesheet">
   </head>
 
-  <body ng-controller="mainController">
-    <header>
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <body ng-controller="mainController as stockPage">
+    <div class="header">
+      <div class="navbar navbar-expand-md navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Crypto Stock Exchange</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -38,40 +37,36 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
-      </nav>
-    </header>
+      </div>
+    </div>
 
-    <div class="container-fluid">
-      <div class="col-sm-9 ml-sm-auto col-md-10 pt-3 main-container">
+    <div class="container">
+      <div class="col-sm-9 col-md-10 pt-3 main-container">
         <div class="row stocks-title">
           <h2>Stocks for sale</h2>
         </div>
         <div class="row stocks">
-          <ul>
-            <li>Stock</li>
-            <li>Current price</li>
-            <li>Total amount</li>
-          </ul>
-          <ul ng-repeat="stock in stocks">
-            <li>{{stock.name}}</li>
-            <li>{{stock.price}}</li>
-            <li>{{stock.amount}}</li>
-            <li><a href="{{stock.id}}">Buy</a></li>
-          </ul>
+          <table>
+            <tr>
+              <td>Name</td>
+              <td>Current price</td>
+              <td>Total amount</td>
+              <td></td>
+            </tr>
+            <tr ng-repeat="stock in stockPage.stocks">
+              <td>{{stock.name}}</td>
+              <td>{{stock.price}}</li>
+              <td>{{stock.amount}}</td>
+              <td><a href="{{stock.id}}">Buy</a></td>
+            </tr>
+          </table>
         </div>
-
-
       </div>
     </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-    <script src="core.js"></script>
   </body>
 </html>
