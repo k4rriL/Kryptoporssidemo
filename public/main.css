@@ -24,7 +24,8 @@ h2 {
 }
 
 table {
-  width: 100%;
+  width: 90%;
+  margin: auto;
 }
 
 td {
@@ -33,8 +34,23 @@ td {
   text-align: center;
 }
 
+td a {
+  display: block;
+  padding: 5px 0px;
+  background-color: #b3b3b3;
+  border-radius: 5px;
+  color: black;
+}
+
+td a:hover {
+  background-color: #28a745;
+  text-decoration: none;
+  color: black;
+}
+
 tr:nth-child(1) > td {
   background-color: #b3b3b3;
+  font-weight: bold;
 }
 
 tr:nth-child(1) {

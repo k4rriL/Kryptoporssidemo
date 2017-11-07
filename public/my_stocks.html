@@ -22,7 +22,7 @@
     <div class="container">
       <div class="col-sm-9 col-md-10 pt-3 main-container">
         <div class="row stocks-title">
-          <h2>Stocks for sale</h2>
+          <h2>My stocks</h2>
         </div>
         <div class="row stocks">
           <table>
@@ -36,15 +36,12 @@
               <td>{{stock.name}}</td>
               <td>{{stock.price}}</li>
               <td>{{stock.amount}}</td>
-              <td><a href="{{stock.id}}" ng-click="stockPage.buyStock($event)" >Buy</a></td>
+              <td><a href="{{stock.id}}">Buy</a></td>
             </tr>
           </table>
         </div>
       </div>
     </div>
-
-    <ng-include ng-show="stockPage.buying" src="'public/buy_stocks.html'">
-    </ng-include>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
