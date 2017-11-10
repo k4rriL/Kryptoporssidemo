@@ -1,4 +1,5 @@
 var express = require('express');
+var bc = require('./blockchain.js');
 var app = express();
 var port = process.env.PORT || 8080;
 var morgan = require('morgan');
