@@ -7,16 +7,18 @@ module.exports = function(app) {
     });
 
     // Test
+    /*
     app.get('/', function(req, res) {
         res.send("Hello");
     });
+    */
 
     // GET stock test data
     app.get('/api/stocks', function(req, res) {
         //res.send(obj.name + obj.price);
     });
 
-    // PUT stock data
+    // POST stock data
     app.post('/api/stocks', function(req, res) {
         console.log(req);
         console.log("===============");
