@@ -22,5 +22,6 @@ app.get('/my_stocks', function(req, res) {
     res.sendFile('public/my_stocks.html', { root : __dirname});
 });
 
+<<<<<<< HEAD
 app.listen(port);
 console.log("App listening on port " + port);

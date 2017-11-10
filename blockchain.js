@@ -48,6 +48,11 @@ var addBlock = (newBlock) => {
     }
 };
 
+var addNewBlock = (data) => {
+    var newBlock = generateNextBlock(data);
+    addBlock(newBlock);
+}
+
 var isValidNewBlock = (newBlock, previousBlock) => {
 if (previousBlock.index + 1 !== newBlock.index) {
         console.log('invalid index');
@@ -87,6 +92,7 @@ var replaceChain = (newBlocks) => {
     }
 };
 
+module.exports.addNewBlock = addNewBlock;
 module.exports.replaceChain = replaceChain;
 module.exports.addBlock = addBlock;
 module.exports.blockchain = blockchain;
