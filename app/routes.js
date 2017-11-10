@@ -1,4 +1,11 @@
 module.exports = function(app) {
+    var bc = require('../blockchain.js');
+    var test = bc.generateNextBlock("123");
+    bc.addBlock(test);
+    console.log(bc.blockchain);
+    //var test = bc.generateNextBlock("Test123");
+    //bc.addBlock(test);
+    //console.log(bc.blockchain);
     var fs = require('fs');
     var arrayOfStocks;
     fs.readFile('./data/test.json', 'utf-8', function(err, data) {

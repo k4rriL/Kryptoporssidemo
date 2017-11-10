@@ -35,7 +35,7 @@ var generateNextBlock = (blockData) => {
 };
 
 var calculateHash = (index, previousHash, timestamp, data) => {
-    return CryptoJS.SHA256(index + previousHash + timestamp + data).toSTring();
+    return CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
 };
 
 var calculateHashForBlock = (block) => {
@@ -48,7 +48,7 @@ var addBlock = (newBlock) => {
     }
 };
 
-var isvalidNewBlock = (newBlock, previousBlock) => {
+var isValidNewBlock = (newBlock, previousBlock) => {
 if (previousBlock.index + 1 !== newBlock.index) {
         console.log('invalid index');
         return false;
