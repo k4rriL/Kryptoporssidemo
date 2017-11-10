@@ -20,19 +20,19 @@ module.exports = function(app) {
 
     // POST stock data
     app.post('/api/stocks', function(req, res) {
-        console.log(req);
-        console.log("===============");
-        console.log(res);
+        console.log(req.body);
+        //console.log("===============");
+        //console.log(res);
         var obj = {
-            name: req.name,
-            price: req.price
+            name: req.body.name,
+            price: req.body.price
         };
-        /*
+        console.log(obj);
         arrayOfStocks.chain.push(obj);
         fs.writeFile('./data/test.json', JSON.stringify(arrayOfStocks), 'utf-8', function(err) {
             if (err) throw err
             console.log("Added " + obj.name + " - " + obj.price);
-        });*/
-        res.send(200);
+        });
+        res.sendStatus(200);
     });
 };
