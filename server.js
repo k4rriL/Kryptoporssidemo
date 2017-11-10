@@ -1,8 +1,8 @@
 var express = require('express');
+var bc = require('./blockchain.js');
 var app = express();
 
 app.use('/public', express.static(__dirname + '/public'));
-
 
 app.get('/', function(req, res) {
     res.sendFile('public/index.html', { root : __dirname});
