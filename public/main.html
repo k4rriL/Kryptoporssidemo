@@ -1,23 +1,27 @@
-<div class="header">
-  <div class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Crypto Stock Exchange</a>
-    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="my_stocks">My stocks</a>
-        </li>
-      </ul>
-      <form id="search-form" class="form-inline mt-2 mt-md-0">
-        <input name="search" class="form-control mr-sm-2" type="text" placeholder="Search stocks" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" ng-click="stockPage.searchStocks($event)">Search</button>
-      </form>
+<div class="container"  ng-controller="mainController as stockPage">
+  <div class="col-sm-9 col-md-10 pt-3 main-container">
+    <div class="row stocks-title">
+      <h2>Stocks for sale</h2>
+    </div>
+    <div class="row stocks">
+      <table>
+        <tr>
+          <td>Name</td>
+          <td>Current price</td>
+          <td>Total amount</td>
+          <td></td>
+        </tr>
+        <tr ng-repeat="stock in stockPage.stocks" class='clickable-row' data-href='/#!/stock/{{stock.id}}'>
+          <td>{{stock.name}}</td>
+          <td>{{stock.price}}</td>
+          <td>{{stock.amount}}</td>
+          <td><a href="{{stock.id}}" ng-click="stockPage.buyingStock($event)">Buy</a></td>
+        </tr>
+      </table>
     </div>
   </div>
+  <div id="page-mask">
+  </div>
+  <ng-include ng-show="stockPage.buying" src="'/public/buy_stocks.html'">
+  </ng-include>
 </div>
