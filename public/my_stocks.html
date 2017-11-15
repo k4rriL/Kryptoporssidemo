@@ -11,9 +11,9 @@
           <td>Total amount</td>
           <td></td>
         </tr>
-        <tr ng-repeat="stock in stockPage.stocks">
+        <tr ng-repeat="stock in stockPage.stocks" class='clickable-row' data-href='/#!/stock/{{stock.id}}'>
           <td>{{stock.name}}</td>
-          <td>{{stock.price}}</li>
+          <td>{{stock.price}}</td>
           <td>{{stock.amount}}</td>
           <td><a href="{{stock.id}}" ng-click="stockPage.sellingStock($event)">Sell</a></td>
         </tr>

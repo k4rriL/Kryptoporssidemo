@@ -34,6 +34,10 @@ td {
   text-align: center;
 }
 
+tr:last-child > td {
+  border-bottom: none;
+}
+
 td a {
   display: block;
   padding: 5px 0px;
@@ -91,6 +95,23 @@ tr:nth-child(1) {
 .clickable-row:hover {
   background: #d3d3d3;
   cursor: pointer;
+}
+
+.stock-info {
+  margin-left: 50px;
+}
+
+.stock-info h2, h3 {
+  display: inline;
+}
+
+.stock-info h3 {
+  font-weight: lighter;
+}
+
+.stock-open-offers ul {
+  list-style-type: none;
+  padding: 0;
 }
 
 
