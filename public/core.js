@@ -9,6 +9,7 @@ var cryptoExchange = angular.module('cryptoExchange', [])
 
     stockPage.stocks = stocks;
     stockPage.buying = false;
+    stockPage.selling = false;
     stockPage.currentStock = {};
     stockPage.buyingStock = function (event) {
       event.preventDefault();
@@ -23,5 +24,53 @@ var cryptoExchange = angular.module('cryptoExchange', [])
       stockPage.buying = false;
       $('#page-mask').hide();
     }
+
+    stockPage.buyStock = function (event) {
+      event.preventDefault();
+      var data = $('#purchase_form').serializeArray();
+      //buyStock(data);
+      stockPage.currentStock = null;
+      stockPage.buying = false;
+      $('#page-mask').hide();
+    }
+
+    stockPage.sellingStock = function (event) {
+      event.preventDefault();
+      stockPage.selling = true;
+      stockPage.currentStock = stocks[parseInt($(event.target).attr('href'))];
+      $('#page-mask').show();
+    }
+
+    stockPage.cancelSelling = function (event) {
+      event.preventDefault();
+      stockPage.currentStock = null;
+      stockPage.selling = false;
+      $('#page-mask').hide();
+    }
+
+    stockPage.sellStock = function (event) {
+      event.preventDefault();
+      var data = $('#sell_form').serializeArray();
+      //sellStock(data);
+      stockPage.currentStock = null;
+      stockPage.selling = false;
+      $('#page-mask').hide();
+    }
+
+    stockPage.searchStocks = function (event) {
+      event.preventDefault();
+      var query = $('#search-form').serializeArray()[0]["value"];
+      console.log(query);
+      var stocks = []//searchForStocks(query);
+      //stockpage.stocks = stocks;
+    }
+
+    $(document).ready(function() {
+      $("[href]").each(function() {
+          if (this.href == window.location.href) {
+              $(this).addClass("active");
+          }
+      });
+  });
 
   });

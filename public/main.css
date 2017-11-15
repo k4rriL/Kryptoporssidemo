@@ -59,7 +59,7 @@ tr:nth-child(1) {
 
 .purchase-popup {
   display: block;
-  width: 70%;
+  width: 60%;
   margin: auto;
   position: relative;
   padding: 15px;
@@ -78,6 +78,10 @@ tr:nth-child(1) {
 
 .purchase-popup label {
   font-weight: bold;
+}
+
+.purchase-popup button:hover {
+  cursor: pointer;
 }
 
 .stock-name{
