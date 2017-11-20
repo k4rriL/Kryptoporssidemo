@@ -7,6 +7,61 @@ module.exports = function(app) {
         res.send(bc.blockchain);
     });
 
+    // GET front page data
+    app.get('/api/stocks_all/', function(req, res) {
+        var stocks = {};
+        var close = [];
+
+        for (var i = bc.blockchain.length - 1; i >= 0; i--) {
+            var data = bc.blockchain[i].data;
+            if (data.hasOwnProperty("closed")) {
+                close.push(data.closed);
+            } else if (data.hasOwnProperty("id") && close.indexOf(data.id) == -1) {
+                if (stocks.hasOwnProperty(data.symbol)) {
+                    if (data.buy_sell &&
+                       (stocks[data.symbol].bid == null || data.price > stocks[data.symbol].bid))  {
+                        stocks[data.symbol].bid = data.price
+                    } else if (!data.buy_sell &&
+                        (stocks[data.symbol].ask == null || data.price < stocks[data.symbol].ask)) {
+                        stocks[data.symbol].ask = data.price;
+                    }
+                    stocks[data.symbol].volume += data.volume;
+                } else {
+                    if (data.buy_sell) {
+                        stocks[data.symbol] = {
+                            last: null,
+                            bid: data.price,
+                            ask: null,
+                            volume: data.volume
+                        };
+                    } else {
+                        stocks[data.symbol] = {
+                            last: null,
+                            bid: null,
+                            ask: data.price,
+                            volume: data.volume
+                        };
+                    }
+                }
+            } else if (data.hasOwnProperty("transaction")) {
+                if (stocks.hasOwnProperty(data.transaction.symbol)) {
+                    if (stocks[data.transaction.symbol].last == null) {
+                        stocks[data.transaction.symbol].last = data.transaction.price;
+                    }
+                } else {
+                    stocks[data.transaction.symbol] = {
+                        last: data.transaction.price,
+                        bid: null,
+                        ask: null,
+                        volume: 0
+                    }
+                }
+            }
+        }
+
+        res.send(stocks);
+    });
+
     // POST orders/transactions
     app.post('/api/stocks', function(req, res) {
         if (req.body.hasOwnProperty("transaction")) {
@@ -33,10 +88,34 @@ module.exports = function(app) {
                     if (sell == null || data.price < sell) sell = data.price;
                 }
             }
-            //console.log(bc.blockchain[i]);
         }
 
         res.send({buy: buy, sell: sell});
+    });
+
+    // GET open bids/offers for stock
+    app.get('/api/offers/:symbol', function(req, res) {
+        var symbol = req.params.symbol;
+        var bids = [];
+        var offers = [];
+        var closed = [];
+
+        for (var i = bc.blockchain.length - 1; i >= 0; i--) {
+            var data = bc.blockchain[i].data;
+            if (data.hasOwnProperty("id") && data.symbol.toUpperCase() == symbol.toUpperCase()) {
+                if (closed.indexOf(data.id) == -1) {
+                    if (data.buy_sell) {
+                        bids.push(data);
+                    } else {
+                        offers.push(data);
+                    }
+                }
+            } else if (data.hasOwnProperty("closed")) {
+                closed.push(data.closed);
+            }
+        }
+
+        res.send({bids: bids, offers: offers});
     });
 
     // GET all transaction history
@@ -116,15 +195,17 @@ module.exports = function(app) {
 
     function fillWithData() {
         // Order Book test data
-        var nok1 = {symbol: "NOK", buy_sell: true, price: 5.6, volume: 10000, user_id: "123456"};
-        var nok2 = {symbol: "NOK", buy_sell: false, price: 5.7, volume: 8000, user_id: "abcdef"};
-        var nok3 = {symbol: "NOK", buy_sell: true, price: 5.5, volume: 4500, user_id: "123456"};
-        var nok2 = {symbol: "NOK", buy_sell: false, price: 5.65, volumne: 3300, user_id: "abcdef"};
-        var kon1 = {symbol: "KON", buy_sell: true, price: 40.3, volume: 500, user_id: "123456"};
-        var kon2 = {symbol: "KON", buy_sell: false, price: 40.5, volume: 12500, user_id: "123456"};
-        var kon3 = {symbol: "KON", buy_sell: true, price: 40.1, volume: 8000, user_id: "123456"};
-        var kon4 = {symbol: "KON", buy_sell: false, price: 40.35, volume: 750, user_id: "123456"};
-        var kon3 = {symbol: "KON", buy_sell: true, price: 40.45, volume: 800, user_id: "123456"};
+        var nok1 = {id: 1, symbol: "NOK", buy_sell: true, price: 5.6, volume: 10000, user_id: "123456"};
+        var nok2 = {id: 2, symbol: "NOK", buy_sell: false, price: 5.7, volume: 8000, user_id: "abcdef"};
+        var nok3 = {id: 3, symbol: "NOK", buy_sell: true, price: 5.5, volume: 4500, user_id: "123456"};
+        var nok4 = {id: 4, symbol: "NOK", buy_sell: false, price: 5.65, volume: 3300, user_id: "abcdef"};
+        var kon1 = {id: 5, symbol: "KON", buy_sell: true, price: 40.3, volume: 500, user_id: "123456"};
+        var kon2 = {id: 6, symbol: "KON", buy_sell: false, price: 40.5, volume: 12500, user_id: "123456"};
+        var kon3 = {id: 7, symbol: "KON", buy_sell: true, price: 40.1, volume: 8000, user_id: "123456"};
+        var kon4 = {id: 8, symbol: "KON", buy_sell: false, price: 40.35, volume: 750, user_id: "123456"};
+        var kon3 = {id: 9, symbol: "KON", buy_sell: true, price: 40.45, volume: 800, user_id: "123456"};
+
+        var nok1_close = {closed: 1};
 
         // Completed transactions test data
         var t1 = {transaction: {
@@ -173,6 +254,7 @@ module.exports = function(app) {
         bc.addNewBlock(nok1);
         bc.addNewBlock(nok2);
         bc.addNewBlock(nok3);
+        bc.addNewBlock(nok4);
         bc.addNewBlock(kon1);
         bc.addNewBlock(kon2);
         bc.addNewBlock(kon3);
@@ -183,5 +265,6 @@ module.exports = function(app) {
         bc.addNewBlock(t4);
         bc.addNewBlock(t5);
         bc.addNewBlock(t6);
+        //bc.addNewBlock(nok1_close);
     }
 };
