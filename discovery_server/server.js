@@ -41,8 +41,10 @@ function checkConnection(host, port, timeout) {
 }
 
 //metodi, joka queryttaa ketä listasta on paikalla ja pitää listaa yllä
+// kato logiikka uusiks !!!!!!!!!
 function queryOnline(callback) {
       //for loopissa i:t läpi, eli listan jäbät
+      var newList = [];
       var counter = 1;
 
       if (list.length == 0) {
@@ -63,7 +65,7 @@ function queryOnline(callback) {
 };
 
 var checkIfOnline = function (client, callback) {
-    checkConnection("example1.com", 8080).then(function() {
+    checkConnection(client["ip"], client["port"]).then(function() {
       callback(true);
   }, function(err) {
     callback(false);
