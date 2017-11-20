@@ -1,16 +1,18 @@
-var stocks = [{"name":"Test", "price":"9.342", "amount":"15", "id": 0},
-          {"name":"Test2", "price":"13.45", "amount":"16", "id": 1},
-          {"name":"Test3", "price":"1.34", "amount":"11", "id": 2},
-          {"name":"Test4", "price":"23.67", "amount":"5", "id": 3}];
+var stocks = [{"full_name":"Test", "buy_price":"9.342", "volume":"15", "id": 0, "symbol":"NOK"},
+          {"full_name":"Test2", "buy_price":"13.45", "volume":"16", "id": 1, "symbol":"NOK"},
+          {"full_name":"Test3", "buy_price":"1.34", "volume":"11", "id": 2, "symbol":"NOK"},
+          {"full_name":"Test4", "buy_price":"23.67", "volume":"5", "id": 3, "symbol":"NOK"}];
 
 var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
   .controller('mainController', function() {
     $('#page-mask').hide();
     var stockPage = this;
     stockPage.stocks = stocks;
+    stockPage.main_stocks = stocks;
     stockPage.buying = false;
     stockPage.selling = false;
     stockPage.currentStock = {};
+    stockPage.logged_in = true;
 
     stockPage.buyingStock = function (event) {
       event.preventDefault();
@@ -59,6 +61,21 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       $('#page-mask').hide();
     }
 
+    stockPage.searchStocks = function (event) {
+      event.preventDefault();
+      var query = $('#search-form').serializeArray()[0]["value"];
+      var stocks_query = [];
+      for (let i of stockPage.stocks) {
+        if (i.full_name.includes(query) || i.symbol.includes(query)){
+          stocks_query.push(i);
+        }
+      }
+      stockPage.main_stocks = stocks_query;
+      for (let i of stockPage.main_stocks) {
+          console.log(i);
+      }
+    }
+
     $(document).ready(function() {
       $("[href]").each(function() {
           if (this.href == window.location.href) {
@@ -76,23 +93,14 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
         }
       });
     });
+
+
   });
 
 cryptoExchange.controller('stockPageController', function($scope, $routeParams){
     $scope.stock = stocks[parseInt($routeParams.id)];
     console.log($scope.stock);
 });
-
-cryptoExchange.controller('searchController', function(){
-    var search = this;
-    search.searchStocks = function (event) {
-      event.preventDefault();
-      var query = $('#search-form').serializeArray()[0]["value"];
-      console.log(query);
-      var stocks = []//searchForStocks(query);
-      //stockpage.stocks = stocks;
-    }
-  });
 
 cryptoExchange.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider){

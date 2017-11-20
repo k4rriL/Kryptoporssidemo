@@ -114,6 +114,10 @@ tr:nth-child(1) {
   padding: 0;
 }
 
+.navbar-collapse button {
+  margin-right: 10px;
+}
+
 
 #page-mask {
   background: rgba(0, 0, 0, 0.5);
