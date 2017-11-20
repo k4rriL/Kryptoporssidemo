@@ -15,11 +15,8 @@ app.use(methodOverride());
 app.use('/public', express.static(__dirname + '/public'));
 require('./app/routes.js')(app);
 
-app.get('/', function(req, res) {
-    res.sendFile('public/index.html', { root : __dirname });
-});
-app.get('/my_stocks', function(req, res) {
-    res.sendFile('public/my_stocks.html', { root : __dirname});
+app.get('/*', function(req, res) {
+    res.sendFile('/public/index.html', { root : __dirname});
 });
 
 app.listen(port);
