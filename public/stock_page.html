@@ -1,0 +1,26 @@
+<div class="container" ng-controller="stockPageController as stock">
+  <div class="col-sm-9 col-md-10 pt-3 main-container">
+    <div class="row">
+      <div class="stock-info col-sm-5">
+        Stock: <h2>{{stock.name}}</h2>
+        <br />
+        Current value: <h3>{{stock.price}}</h3>
+      </div>
+      <div class="stock-open-offers col-sm-6">
+        <h3>Open offers</h3>
+        <ul>
+          <li>
+            <p>Amount: 3,  Price: 23.54</p>
+          </li>
+          <li>
+            <p>Amount: 1,  Price: 23.20</p>
+          </li>
+          <li>
+            <p>Amount: 5,  Price: 22.54</p>
+          </li>
+          <td><a href="{{stock.id}}" ng-click="stockPage.buyingStock($event)">Buy</a></td>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

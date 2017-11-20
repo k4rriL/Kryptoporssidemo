@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="col-sm-9 col-md-10 pt-3 main-container">
+    <div class="row stocks-title">
+      <h2>My stocks</h2>
+    </div>
+    <div class="row stocks">
+      <table>
+        <tr>
+          <td>Name</td>
+          <td>Sell price</td>
+          <td>Buy price</td>
+          <td>Volume</td>
+          <td></td>
+        </tr>
+        <tr ng-repeat="stock in stockPage.stocks" class='clickable-row' data-href='/#!/stock/{{stock.id}}'>
+          <td>{{stock.full_name}}</td>
+          <td>{{stock.sell_price}}</td>
+          <td>{{stock.buy_price}}</td>
+          <td>{{stock.volume}}</td>
+          <td><a href="{{stock.id}}" ng-click="stockPage.sellingStock($event)">Sell</a></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div id="page-mask">
+  </div>
+  <ng-include ng-show="stockPage.selling" src="'/public/sell_stocks.html'">
+  </ng-include>
+</div>
