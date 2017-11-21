@@ -2,12 +2,12 @@
   <h2>Sell your stocks</h2>
   <form id="sell_form" method="post" target="/sell_stock">
     <label>Stock: </label>
-    <label class="stock-name">{{stockPage.currentStock.name}}</label>
-    <input name="name" type="text" value="{{stockPage.currentStock.name}}" hidden="true">
+    <label class="stock-name">{{stockPage.currentStock.symbol}}</label>
+    <input name="symbol" type="text" value="{{stockPage.currentStock.symbol}}" hidden="true">
     <label for="amount">Amount:</label>
     <input name="amount" type="number" value="1">
     <label for="amount">Price:</label>
-    <input name="price" type="number" value="{{stockPage.currentStock.price}}" step="0.1"/>
+    <input name="price" type="number" value="{{stockPage.currentStock.ask}}" step="0.1"/>
     <button ng-click="stockPage.sellStock($event)" class="btn btn-click btn-success">Confirm</button>
   </form>
   <button ng-click="stockPage.cancelSelling($event)" class="btn btn-click btn-danger">Cancel</button>

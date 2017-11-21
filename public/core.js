@@ -41,10 +41,25 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       event.preventDefault();
       event.stopPropagation();
       var data = $('#purchase_form').serializeArray();
-      //buyStock(data);
-      stockPage.currentStock = null;
-      stockPage.buying = false;
-      $('#page-mask').hide();
+      var post_data = {
+        "symbol": data[0]["value"],
+        "buy_sell": false,
+        "price": parseFloat(data[2]["value"]),
+        "volume": parseInt(data[1]["value"]),
+        "user_id": stockPage.current_user_id
+      }
+
+      $http.post('/api/stocks', post_data).then(
+        function successCallback(response) {
+          console.log(response);
+          stockPage.currentStock = null;
+          stockPage.buying = false;
+          stockPage.updateUserStocks();
+          $('#page-mask').hide();
+        }, function errorCallback(response){
+          console.log(response);
+        }
+      );
     }
 
     stockPage.sellingStock = function (event) {
@@ -64,10 +79,25 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
     stockPage.sellStock = function (event) {
       event.preventDefault();
       var data = $('#sell_form').serializeArray();
-      //sellStock(data);
-      stockPage.currentStock = null;
-      stockPage.selling = false;
-      $('#page-mask').hide();
+      var post_data = {
+        "symbol": data[0]["value"],
+        "buy_sell": true,
+        "price": parseFloat(data[2]["value"]),
+        "volume": parseInt(data[1]["value"]),
+        "user_id": stockPage.current_user_id
+      }
+
+      $http.post('/api/stocks', post_data).then(
+        function successCallback(response) {
+          console.log(response);
+          stockPage.currentStock = null;
+          stockPage.selling = false;
+          stockPage.updateUserStocks();
+          $('#page-mask').hide();
+        }, function errorCallback(response){
+          console.log(response);
+        }
+      );
     }
 
     stockPage.searchStocks = function (event) {
@@ -99,35 +129,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
           if (response.data.status == 200){
             stockPage.logged_in = true;
             stockPage.current_user_id = response.data.user_id;
-
-            //Get users stocks
-            var query = '/api/portfolio/' + stockPage.current_user_id;
-            $http.get(query).then(
-              function successCallback(response) {
-                var user_stocks = {};
-                var keys = Object.keys(response.data);
-                for( var key in response.data ){
-                  user_stocks[key] = {
-                    "symbol": key,
-                    "volume": response.data[key]
-                  }
-
-                  //Get stock general information
-                  var symbol_query = '/api/stocks/' + key;
-                  $http.get(symbol_query).then(
-                    function successCallback(response) {
-                      user_stocks[response.data.symbol]["buy"] = response.data["buy"];
-                      user_stocks[response.data.symbol]["sell"] = response.data["sell"];
-                    },
-                    function errorCallback(response) {}
-                  );
-                }
-                stockPage.current_user_stocks = user_stocks;
-              },
-              function errorCallback(response) {
-                console.log("Connection failed");
-              }
-            );
+            stockPage.updateUserStocks();
           } else {
             console.log("Login failed, try again")
           }
@@ -143,6 +145,37 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       stockPage.logged_in = false;
       stockPage.current_user_id = null;
       stockPage.current_user_stocks = [];
+    }
+
+    stockPage.updateUserStocks = function() {
+      //Get users stocks
+      var query = '/api/portfolio/' + stockPage.current_user_id;
+      $http.get(query).then(
+        function successCallback(response) {
+          var user_stocks = {};
+          var keys = Object.keys(response.data);
+          for( var key in response.data ){
+            user_stocks[key] = {
+              "symbol": key,
+              "volume": response.data[key]
+            }
+
+            //Get stock general information
+            var symbol_query = '/api/stocks/' + key;
+            $http.get(symbol_query).then(
+              function successCallback(response) {
+                user_stocks[response.data.symbol]["buy"] = response.data["buy"];
+                user_stocks[response.data.symbol]["sell"] = response.data["sell"];
+              },
+              function errorCallback(response) {}
+            );
+          }
+          stockPage.current_user_stocks = user_stocks;
+        },
+        function errorCallback(response) {
+          console.log("Connection failed");
+        }
+      );
     }
 
     $(document).ready(function() {
@@ -163,6 +196,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       });
     });
   });
+
+
 
 cryptoExchange.controller('stockPageController', function($scope, $routeParams){
     var symbol = $routeParams.id;

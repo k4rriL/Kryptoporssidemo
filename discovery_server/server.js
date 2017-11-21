@@ -33,6 +33,7 @@ app.use(function (req, res, next) {
 var list = [{"ip":"127.0.0.1", "port":5004}];
 
 app.post('/add_new', function(req, res) {
+  queryOnline(function(){
     if(req.body.ip != null && req.body.port != null) {
       list.push({"ip": req.body.ip, "port":req.body.port});
       console.log(list);
@@ -40,6 +41,7 @@ app.post('/add_new', function(req, res) {
     } else {
       res.send({"status": 400, "message": "Ip or port is not defined in request body"})
     }
+  })
 });
 
 //palauta lista
@@ -50,9 +52,9 @@ app.get('/get_list', function(req, res) {
 });
 
 app.post('/login', function(req, res) {
-  if(req.body.username != null && req.body.password != null) {
-    var username = req.body.username;
-    var password = req.body.password;
+  var username = req.body.username;
+  var password = req.body.password;
+  if(username != null && password != null) {
     var hashed_password = CryptoJS.SHA256(username + password).toString(CryptoJS.enc.Hex);
     var user_id = "";
     for (var i = 0; i < credentials.length; i++) {
