@@ -54,7 +54,6 @@ app.post('/login', function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var hashed_password = CryptoJS.SHA256(username + password).toString(CryptoJS.enc.Hex);
-    console.log(hashed_password);
     var user_id = "";
     for (var i = 0; i < credentials.length; i++) {
       if (username == credentials[i].username && hashed_password == credentials[i].password){

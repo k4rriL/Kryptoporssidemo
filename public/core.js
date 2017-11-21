@@ -1,24 +1,32 @@
-var stocks = [{"full_name":"Test", "buy_price":"9.342", "volume":"15", "id": 0, "symbol":"NOK"},
-          {"full_name":"Test2", "buy_price":"13.45", "volume":"16", "id": 1, "symbol":"NOK"},
-          {"full_name":"Test3", "buy_price":"1.34", "volume":"11", "id": 2, "symbol":"NOK"},
-          {"full_name":"Test4", "buy_price":"23.67", "volume":"5", "id": 3, "symbol":"NOK"}];
+var stocks;
 
 var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
   .controller('mainController', function($http) {
     $('#page-mask').hide();
     var stockPage = this;
-    stockPage.stocks = stocks;
-    stockPage.main_stocks = stocks;
+
+    $http.get('/api/stocks_all').then(
+      function successCallback(response) {
+        stocks = response.data;
+        stockPage.stocks = stocks;
+        stockPage.main_stocks = stocks;
+      },
+      function errorCallback(response) {
+        console.log("Connection failed");
+      }
+    );
+
     stockPage.buying = false;
     stockPage.selling = false;
     stockPage.currentStock = {};
     stockPage.logged_in = false;
     stockPage.current_user_id = null;
+    stockPage.current_user_stocks = [];
 
     stockPage.buyingStock = function (event) {
       event.preventDefault();
       stockPage.buying = true;
-      stockPage.currentStock = stocks[parseInt($(event.target).attr('href'))];
+      stockPage.currentStock = stocks[$(event.target).attr('href')];
       $('#page-mask').show();
     }
 
@@ -42,7 +50,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
     stockPage.sellingStock = function (event) {
       event.preventDefault();
       stockPage.selling = true;
-      stockPage.currentStock = stocks[parseInt($(event.target).attr('href'))];
+      stockPage.currentStock = stocks[$(event.target).attr('href')];
       $('#page-mask').show();
     }
 
@@ -76,18 +84,50 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
 
     stockPage.login = function (event) {
       event.preventDefault();
+
+      //Get login data
       var loginData = $('#login-form').serializeArray();
-      var username = loginData[0]["value"];
-      var password = loginData[1]["value"];
       var data = {
-        "username": username,
-        "password": password
+        "username": loginData[0]["value"];,
+        "password": loginData[1]["value"]
       };
+
+      //Post login to discovery server, retrieve user id
       $http.post('http://localhost:5005/login', data).then(
         function successCallback(response) {
+          //If login is successful, get user related data
           if (response.data.status == 200){
             stockPage.logged_in = true;
             stockPage.current_user_id = response.data.user_id;
+
+            //Get users stocks
+            var query = '/api/portfolio/' + stockPage.current_user_id;
+            $http.get(query).then(
+              function successCallback(response) {
+                var user_stocks = {};
+                var keys = Object.keys(response.data);
+                for( var key in response.data ){
+                  user_stocks[key] = {
+                    "symbol": key,
+                    "volume": response.data[key]
+                  }
+
+                  //Get stock general information
+                  var symbol_query = '/api/stocks/' + key;
+                  $http.get(symbol_query).then(
+                    function successCallback(response) {
+                      user_stocks[response.data.symbol]["buy"] = response.data["buy"];
+                      user_stocks[response.data.symbol]["sell"] = response.data["sell"];
+                    },
+                    function errorCallback(response) {}
+                  );
+                }
+                stockPage.current_user_stocks = user_stocks;
+              },
+              function errorCallback(response) {
+                console.log("Connection failed");
+              }
+            );
           } else {
             console.log("Login failed, try again")
           }
@@ -101,15 +141,17 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
     stockPage.logout = function (event) {
       event.preventDefault();
       stockPage.logged_in = false;
+      stockPage.current_user_id = null;
+      stockPage.current_user_stocks = [];
     }
 
     $(document).ready(function() {
       $("[href]").each(function() {
-          if (this.href == window.location.href) {
-              $(this).addClass("active");
-          } else {
-              $(this).removeClass("active");
-          }
+        if (this.href == window.location.href) {
+          $(this).addClass("active");
+        } else {
+          $(this).removeClass("active");
+        }
       });
     });
 
@@ -120,13 +162,11 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
         }
       });
     });
-
-
   });
 
 cryptoExchange.controller('stockPageController', function($scope, $routeParams){
-    $scope.stock = stocks[parseInt($routeParams.id)];
-    console.log($scope.stock);
+    var symbol = $routeParams.id;
+    $scope.stock = stocks[symbol];
 });
 
 cryptoExchange.config(['$routeProvider', '$locationProvider',
@@ -143,4 +183,5 @@ cryptoExchange.config(['$routeProvider', '$locationProvider',
         }).otherwise({
             redirectTo: "/"
         });
-}]);
+    }
+]);

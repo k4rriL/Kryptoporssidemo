@@ -9,19 +9,17 @@
           <td>Name</td>
           <td>Sell price</td>
           <td>Buy price</td>
+          <td>Last sold</td>
           <td>Volume</td>
         </tr>
-        <tr ng-repeat="stock in stockPage.main_stocks" class='clickable-row' data-href='/#!/stock/{{stock.id}}'>
-          <td>{{stock.full_name}}</td>
-          <td>{{stock.sell_price}}</td>
-          <td>{{stock.buy_price}}</td>
+        <tr ng-repeat="stock in stockPage.main_stocks" class='clickable-row' data-href='/#!/stock/{{stock.symbol}}'>
+          <td>{{stock.symbol}}</td>
+          <td>{{stock.bid}}€</td>
+          <td>{{stock.ask}}€</td>
+          <td>{{stock.last}}€</td>
           <td>{{stock.volume}}</td>
         </tr>
       </table>
     </div>
   </div>
-  <div id="page-mask">
-  </div>
-  <ng-include ng-show="stockPage.buying" src="'/public/buy_stocks.html'">
-  </ng-include>
 </div>

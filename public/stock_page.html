@@ -2,9 +2,15 @@
   <div class="col-sm-9 col-md-10 pt-3 main-container">
     <div class="row">
       <div class="stock-info col-sm-5">
-        Stock: <h2>{{stock.name}}</h2>
+        Stock: <h2>{{stock.symbol}}</h2>
         <br />
-        Current value: <h3>{{stock.price}}</h3>
+        Current value: <h3>{{stock.last}}€</h3>
+        <br />
+        Buy price: <h3>{{stock.bid}}€</h3>
+        <br />
+        Sell price: <h3>{{stock.ask}}€</h3>
+        <br />
+        Volume: <h3>{{stock.volume}}</h3>
       </div>
       <div class="stock-open-offers col-sm-6">
         <h3>Open offers</h3>

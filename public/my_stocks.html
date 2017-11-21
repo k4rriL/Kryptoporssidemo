@@ -9,15 +9,15 @@
           <td>Name</td>
           <td>Sell price</td>
           <td>Buy price</td>
-          <td>Volume</td>
+          <td>Amount owned</td>
           <td></td>
         </tr>
-        <tr ng-repeat="stock in stockPage.stocks" class='clickable-row' data-href='/#!/stock/{{stock.id}}'>
-          <td>{{stock.full_name}}</td>
-          <td>{{stock.sell_price}}</td>
-          <td>{{stock.buy_price}}</td>
+        <tr ng-repeat="stock in stockPage.current_user_stocks track by stock.symbol" class='clickable-row' data-href='/#!/stock/{{stock.symbol}}'>
+          <td>{{stock.symbol}}</td>
+          <td>{{stock.buy}}€</td>
+          <td>{{stock.sell}}€</td>
           <td>{{stock.volume}}</td>
-          <td><a href="{{stock.id}}" ng-click="stockPage.sellingStock($event)">Sell</a></td>
+          <td><a href="{{stock.symbol}}" ng-click="stockPage.sellingStock($event)">Sell</a></td>
         </tr>
       </table>
     </div>

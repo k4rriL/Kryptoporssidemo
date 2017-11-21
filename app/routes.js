@@ -32,14 +32,16 @@ module.exports = function(app) {
                             last: null,
                             bid: data.price,
                             ask: null,
-                            volume: data.volume
+                            volume: data.volume,
+                            symbol: data.symbol
                         };
                     } else {
                         stocks[data.symbol] = {
                             last: null,
                             bid: null,
                             ask: data.price,
-                            volume: data.volume
+                            volume: data.volume,
+                            symbol: data.symbol
                         };
                     }
                 }
@@ -53,7 +55,8 @@ module.exports = function(app) {
                         last: data.transaction.price,
                         bid: null,
                         ask: null,
-                        volume: 0
+                        volume: 0,
+                        symbol: data.transaction.symbol
                     }
                 }
             }
@@ -90,7 +93,7 @@ module.exports = function(app) {
             }
         }
 
-        res.send({buy: buy, sell: sell});
+        res.send({buy: buy, sell: sell, symbol: symbol});
     });
 
     // GET open bids/offers for stock

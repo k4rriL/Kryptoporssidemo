@@ -26,6 +26,7 @@ h2 {
 table {
   width: 90%;
   margin: auto;
+  margin-bottom: 15px;
 }
 
 td {
