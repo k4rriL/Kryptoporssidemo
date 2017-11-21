@@ -36,9 +36,9 @@
           <form id="login-form" class="form-inline mt-2 mt-md-0" ng-show="!stockPage.logged_in">
             <input name="username" class="form-control mr-sm-2" type="text" placeholder="Username">
             <input name="password" class="form-control mr-sm-2" type="password" placeholder="Password">
-            <button class="btn btn-outline-success my-2 my-sm-0" ng-click="stockPage.login($event)">Search</button>
+            <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="stockPage.login($event)">Login</button>
           </form>
-          <button class="btn btn-outline-success my-2 my-sm-0" ng-show="stockPage.logged_in" ng-click="stockPage.logout($event)">Logout</button>
+          <button class="btn btn-outline-warning my-2 my-sm-0" ng-show="stockPage.logged_in" ng-click="stockPage.logout($event)">Logout</button>
           <form id="search-form" class="form-inline mt-2 mt-md-0">
             <input name="search" class="form-control mr-sm-2" type="text" placeholder="Search stocks" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" ng-click="stockPage.searchStocks($event)">Search</button>

@@ -4,7 +4,7 @@ var stocks = [{"full_name":"Test", "buy_price":"9.342", "volume":"15", "id": 0, 
           {"full_name":"Test4", "buy_price":"23.67", "volume":"5", "id": 3, "symbol":"NOK"}];
 
 var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
-  .controller('mainController', function() {
+  .controller('mainController', function($http) {
     $('#page-mask').hide();
     var stockPage = this;
     stockPage.stocks = stocks;
@@ -12,7 +12,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
     stockPage.buying = false;
     stockPage.selling = false;
     stockPage.currentStock = {};
-    stockPage.logged_in = true;
+    stockPage.logged_in = false;
+    stockPage.current_user_id = null;
 
     stockPage.buyingStock = function (event) {
       event.preventDefault();
@@ -63,17 +64,43 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
 
     stockPage.searchStocks = function (event) {
       event.preventDefault();
-      var query = $('#search-form').serializeArray()[0]["value"];
+      var query = $('#search-form').serializeArray()[0]["value"].toLowerCase();
       var stocks_query = [];
       for (let i of stockPage.stocks) {
-        if (i.full_name.includes(query) || i.symbol.includes(query)){
+        if (i.full_name.toLowerCase().includes(query) || i.symbol.toLowerCase().includes(query)){
           stocks_query.push(i);
         }
       }
       stockPage.main_stocks = stocks_query;
-      for (let i of stockPage.main_stocks) {
-          console.log(i);
-      }
+    }
+
+    stockPage.login = function (event) {
+      event.preventDefault();
+      var loginData = $('#login-form').serializeArray();
+      var username = loginData[0]["value"];
+      var password = loginData[1]["value"];
+      var data = {
+        "username": username,
+        "password": password
+      };
+      $http.post('http://localhost:5005/login', data).then(
+        function successCallback(response) {
+          if (response.data.status == 200){
+            stockPage.logged_in = true;
+            stockPage.current_user_id = response.data.user_id;
+          } else {
+            console.log("Login failed, try again")
+          }
+        },
+        function errorCallback(response) {
+          console.log("Connection failed");
+        }
+      );
+    }
+
+    stockPage.logout = function (event) {
+      event.preventDefault();
+      stockPage.logged_in = false;
     }
 
     $(document).ready(function() {

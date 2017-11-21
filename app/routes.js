@@ -245,7 +245,7 @@ module.exports = function(app) {
         }};
         var t6 = {transaction: {
                 "symbol": "NOK",
-                "buyer_id": "098765",
+                "buyer_id": "987654",
                 "seller_id": "123456",
                 "price": 5.124,
                 "volume": 3000
