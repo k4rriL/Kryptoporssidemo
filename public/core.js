@@ -88,7 +88,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       //Get login data
       var loginData = $('#login-form').serializeArray();
       var data = {
-        "username": loginData[0]["value"];,
+        "username": loginData[0]["value"],
         "password": loginData[1]["value"]
       };
 
