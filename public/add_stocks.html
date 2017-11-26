@@ -1,0 +1,13 @@
+<div class="purchase-popup">
+  <h2>Add stocks you own</h2>
+  <form id="add_stock_form">
+    <label for="symbol">3 letter abbreviation:</label>
+    <input maxlength="3" size="3" name="symbol" type="text" value="" width>
+    <label for="full-name">Full name of stock:</label>
+    <input name="full-name" type="text" value="">
+    <label for="amount">Amount:</label>
+    <input name="amount" type="number" min="1" value="1" size="7">
+    <button ng-click="stockPage.sendNewStocks($event)" class="btn btn-click btn-success">Confirm</button>
+  </form>
+  <button ng-click="stockPage.cancelAddStocks($event)" class="btn btn-click btn-danger">Cancel</button>
+</div>

@@ -4,8 +4,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
   .controller('mainController', function($http, localStorageService) {
     $('#page-mask').hide();
     var stockPage = this;
-    stockPage.buying = false;
     stockPage.selling = false;
+    stockPage.adding = false;
     stockPage.currentStock = {};
     stockPage.current_user_stocks = [];
 
@@ -144,6 +144,40 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       stockPage.current_user_id = null;
       localStorageService.set('currentUser', null);
       stockPage.current_user_stocks = [];
+    }
+
+    stockPage.addStocks = function (event) {
+      event.preventDefault();
+      stockPage.adding = true;
+      $('#page-mask').show();
+    }
+
+    stockPage.cancelAddStocks = function (event) {
+      event.preventDefault();
+      stockPage.adding = false;
+      $('#page-mask').hide();
+    }
+
+    stockPage.sendNewStocks = function (event) {
+      event.preventDefault();
+      var data = $('#add_stock_form').serializeArray();
+      var post_data = {
+        "symbol": data[0]["value"],
+        "full_name": data[1]["value"],
+        "volume": parseInt(data[2]["value"]),
+        "user_id": stockPage.current_user_id
+      }
+
+      $http.post('/api/add', post_data).then(
+        function successCallback(response) {
+          console.log(response);
+          stockPage.adding = false;
+          stockPage.updateUserStocks();
+          $('#page-mask').hide();
+        }, function errorCallback(response){
+          console.log(response);
+        }
+      );
     }
 
     $(document).ready(function() {

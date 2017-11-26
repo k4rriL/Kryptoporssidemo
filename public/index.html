@@ -41,6 +41,7 @@
             <input name="password" class="form-control mr-sm-2" type="password" placeholder="Password">
             <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="stockPage.login($event)">Login</button>
           </form>
+          <button class="btn btn-outline-success my-2 my-sm-0" ng-show="stockPage.logged_in" ng-click="stockPage.addStocks($event)">Add stocks</button>
           <button class="btn btn-outline-warning my-2 my-sm-0" ng-show="stockPage.logged_in" ng-click="stockPage.logout($event)">Logout</button>
           <form id="search-form" class="form-inline mt-2 mt-md-0">
             <input name="search" class="form-control mr-sm-2" type="text" placeholder="Search stocks" aria-label="Search">
@@ -49,8 +50,15 @@
         </div>
       </div>
     </div>
+
     <ng-view>
     </ng-view>
+    <div id="page-mask">
+    </div>
+    <ng-include ng-show="stockPage.adding" src="'/public/add_stocks.html'">
+    </ng-include>
+    <ng-include ng-show="stockPage.selling" src="'/public/make_sell_offer.html'">
+    </ng-include>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
