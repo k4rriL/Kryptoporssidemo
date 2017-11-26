@@ -30,11 +30,14 @@ app.use(function (req, res, next) {
 });
 
 
-var list = [{"ip":"127.0.0.1", "port":5004}];
+global.list = [];
 
 app.post('/add_new', function(req, res) {
+  console.log("Received post call");
+  //console.log("this is list" + list);
   queryOnline(function(){
     if(req.body.ip != null && req.body.port != null) {
+      //console.log(req.body);
       list.push({"ip": req.body.ip, "port":req.body.port});
       console.log(list);
       res.send({"status": 200});
@@ -97,25 +100,36 @@ function checkConnection(host, port, timeout) {
 function queryOnline(callback) {
       //for loopissa i:t läpi, eli listan jäbät
       var newList = [];
-      var counter = 1;
+
+      console.log("list before query");
+      console.log(list);
 
       if (list.length == 0) {
         callback();
+        return;
       }
 
+      //console.log(list);
+
       for (i = 0; i < list.length; i++) {
-        checkIfOnline(list[i], function(returnValue){
+        console.log(list[i]);
+        checkIfOnline(i, function(returnValue){
           if(returnValue == true){
             newList.push(list[i]);
           }
         })
       }
+
       list = newList;
       callback();
 };
 
-var checkIfOnline = function (client, callback) {
-    checkConnection(client["ip"], client["port"]).then(function() {
+var checkIfOnline = function (client_index, callback) {
+  console.log("list in check");
+  console.log(list);
+  console.log(client_index);
+  console.log(list[client_index]);
+    checkConnection(list[client_index]["ip"], list[client_index]["port"]).then(function() {
       callback(true);
   }, function(err) {
     callback(false);

@@ -1,9 +1,44 @@
 var stocks;
 
-var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
-  .controller('mainController', function($http) {
+var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageModule'])
+  .controller('mainController', function($http, localStorageService) {
     $('#page-mask').hide();
     var stockPage = this;
+    stockPage.buying = false;
+    stockPage.selling = false;
+    stockPage.currentStock = {};
+    stockPage.current_user_stocks = [];
+
+    stockPage.updateUserStocks = function() {
+      //Get users stocks
+      var query = '/api/portfolio/' + stockPage.current_user_id;
+      $http.get(query).then(
+        function successCallback(response) {
+          var user_stocks = {};
+          var keys = Object.keys(response.data);
+          for( var key in response.data ){
+            user_stocks[key] = {
+              "symbol": key,
+              "volume": response.data[key]
+            }
+
+            //Get stock general information
+            var symbol_query = '/api/stocks/' + key;
+            $http.get(symbol_query).then(
+              function successCallback(response) {
+                user_stocks[response.data.symbol]["buy"] = response.data["buy"];
+                user_stocks[response.data.symbol]["sell"] = response.data["sell"];
+              },
+              function errorCallback(response) {}
+            );
+          }
+          stockPage.current_user_stocks = user_stocks;
+        },
+        function errorCallback(response) {
+          console.log("Connection failed");
+        }
+      );
+    }
 
     $http.get('/api/stocks_all').then(
       function successCallback(response) {
@@ -16,72 +51,34 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       }
     );
 
-    stockPage.buying = false;
-    stockPage.selling = false;
-    stockPage.currentStock = {};
-    stockPage.logged_in = false;
-    stockPage.current_user_id = null;
-    stockPage.current_user_stocks = [];
-
-    stockPage.buyingStock = function (event) {
-      event.preventDefault();
-      stockPage.buying = true;
-      stockPage.currentStock = stocks[$(event.target).attr('href')];
-      $('#page-mask').show();
+    stockPage.current_user_id = localStorageService.get('currentUser');
+    if (stockPage.current_user_id){
+      stockPage.logged_in = true;
+      stockPage.updateUserStocks();
+    } else {
+      stockPage.logged_in = false;
     }
 
-    stockPage.cancelBuying = function (event) {
-      event.preventDefault();
-      stockPage.currentStock = null;
-      stockPage.buying = false;
-      $('#page-mask').hide();
-    }
-
-    stockPage.buyStock = function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      var data = $('#purchase_form').serializeArray();
-      var post_data = {
-        "symbol": data[0]["value"],
-        "buy_sell": false,
-        "price": parseFloat(data[2]["value"]),
-        "volume": parseInt(data[1]["value"]),
-        "user_id": stockPage.current_user_id
-      }
-
-      $http.post('/api/stocks', post_data).then(
-        function successCallback(response) {
-          console.log(response);
-          stockPage.currentStock = null;
-          stockPage.buying = false;
-          stockPage.updateUserStocks();
-          $('#page-mask').hide();
-        }, function errorCallback(response){
-          console.log(response);
-        }
-      );
-    }
-
-    stockPage.sellingStock = function (event) {
+    stockPage.makeSellOffer = function (event) {
       event.preventDefault();
       stockPage.selling = true;
-      stockPage.currentStock = stocks[$(event.target).attr('href')];
+      stockPage.currentStock = stockPage.current_user_stocks[$(event.target).attr('href')];
       $('#page-mask').show();
     }
 
-    stockPage.cancelSelling = function (event) {
+    stockPage.cancelSellOffer = function (event) {
       event.preventDefault();
       stockPage.currentStock = null;
       stockPage.selling = false;
       $('#page-mask').hide();
     }
 
-    stockPage.sellStock = function (event) {
+    stockPage.sendSellOffer = function (event) {
       event.preventDefault();
-      var data = $('#sell_form').serializeArray();
+      var data = $('#make_sell_offer_form').serializeArray();
       var post_data = {
         "symbol": data[0]["value"],
-        "buy_sell": true,
+        "buy_sell": false,
         "price": parseFloat(data[2]["value"]),
         "volume": parseInt(data[1]["value"]),
         "user_id": stockPage.current_user_id
@@ -129,6 +126,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
           if (response.data.status == 200){
             stockPage.logged_in = true;
             stockPage.current_user_id = response.data.user_id;
+            localStorageService.set('currentUser', response.data.user_id);
             stockPage.updateUserStocks();
           } else {
             console.log("Login failed, try again")
@@ -144,38 +142,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
       event.preventDefault();
       stockPage.logged_in = false;
       stockPage.current_user_id = null;
+      localStorageService.set('currentUser', null);
       stockPage.current_user_stocks = [];
-    }
-
-    stockPage.updateUserStocks = function() {
-      //Get users stocks
-      var query = '/api/portfolio/' + stockPage.current_user_id;
-      $http.get(query).then(
-        function successCallback(response) {
-          var user_stocks = {};
-          var keys = Object.keys(response.data);
-          for( var key in response.data ){
-            user_stocks[key] = {
-              "symbol": key,
-              "volume": response.data[key]
-            }
-
-            //Get stock general information
-            var symbol_query = '/api/stocks/' + key;
-            $http.get(symbol_query).then(
-              function successCallback(response) {
-                user_stocks[response.data.symbol]["buy"] = response.data["buy"];
-                user_stocks[response.data.symbol]["sell"] = response.data["sell"];
-              },
-              function errorCallback(response) {}
-            );
-          }
-          stockPage.current_user_stocks = user_stocks;
-        },
-        function errorCallback(response) {
-          console.log("Connection failed");
-        }
-      );
     }
 
     $(document).ready(function() {
@@ -191,24 +159,143 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
     $(document).ready(function($) {
       $(".clickable-row").click(function(event) {
         if (!$(event["originalEvent"].target).is("a")){
-          window.location = $(this).data("href");
+          var href = $(this).data("href");
+          if (href !== undefined){
+            window.location = href;
+          }
         }
       });
     });
   });
 
+cryptoExchange.controller('stockPageController', function($scope, $routeParams, $http, localStorageService){
+  $('#page-mask').hide();
+  $scope.symbol = $routeParams.id;
+  $scope.stock = stocks[$scope.symbol];
+  $scope.buying = false;
+  $scope.selling = false;
+  $scope.makingBuyOffer = false;
+  $scope.currentOffer = null;
+  $scope.localStorageService = localStorageService;
 
+  var query = '/api/offers/' + $scope.symbol;
+  $http.get(query).then(
+    function successResponse(response){
+      $scope.buy_offers = response.data.bids;
+      $scope.sell_offers = response.data.offers;
+    }, function errorResponse(error){}
+  )
 
-cryptoExchange.controller('stockPageController', function($scope, $routeParams, $http){
-    var symbol = $routeParams.id;
-    $scope.stock = stocks[symbol];
-    var query = '/api/offers/' + symbol;
-    $http.get(query).then(
-      function successResponse(response){
-        $scope.buy_offers = response.data.bids;
-        $scope.sell_offers = response.data.offers;
-      }, function errorResponse(error){}
-    )
+  $scope.buyingStock = function (event) {
+    event.preventDefault();
+    $scope.buying = true;
+    $scope.currentOffer = $scope.sell_offers[$(event.target).closest("tr").index()];
+    $('#page-mask').show();
+  }
+
+  $scope.cancelBuying = function (event) {
+    event.preventDefault();
+    $scope.currentOffer = null;
+    $scope.buying = false;
+    $('#page-mask').hide();
+  }
+
+  $scope.buyStock = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (localStorageService.get('currentUser')){
+      var data = $('#purchase_form').serializeArray();
+      var post_data = {
+        "transaction": {
+          "symbol": $scope.symbol,
+          "price": $scope.currentOffer.price,
+          "volume": parseInt(data[1]["value"]),
+          "buyer_id": localStorageService.get('currentUser'),
+          "seller_id": $scope.currentOffer.user_id
+        }
+      }
+
+      $http.post('/api/stocks', post_data).then(
+        function successCallback(response) {
+          $scope.buying = false;
+          $('#page-mask').hide();
+        }, function errorCallback(response){
+        }
+      );
+    }
+  }
+
+  $scope.sellingStock = function (event) {
+    event.preventDefault();
+    $scope.selling = true;
+    $scope.currentOffer = $scope.buy_offers[$(event.target).closest("tr").index()];
+    $('#page-mask').show();
+  }
+
+  $scope.cancelSelling = function (event) {
+    event.preventDefault();
+    $scope.currentOffer = null;
+    $scope.selling = false;
+    $('#page-mask').hide();
+  }
+
+  $scope.sellStock = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (localStorageService.get('currentUser')){
+      var data = $('#sell_form').serializeArray();
+      var post_data = {
+        "transaction": {
+          "symbol": $scope.symbol,
+          "price": $scope.currentOffer.price,
+          "volume": parseInt(data[1]["value"]),
+          "seller_id": localStorageService.get('currentUser'),
+          "buyer_id": $scope.currentOffer.user_id
+        }
+      }
+
+      $http.post('/api/stocks', post_data).then(
+        function successCallback(response) {
+          $scope.currentOffer = null;
+          $scope.selling = false;
+          $('#page-mask').hide();
+        }, function errorCallback(response){
+        }
+      );
+    }
+  }
+
+  $scope.makeBuyOffer = function (event) {
+    event.preventDefault();
+    $scope.makingBuyOffer = true;
+    $('#page-mask').show();
+  }
+  $scope.cancelBuyOffer = function (event) {
+    event.preventDefault();
+    $scope.makingBuyOffer = false;
+    $('#page-mask').hide();
+  }
+
+  $scope.sendBuyOffer = function (event) {
+    event.preventDefault();
+    var data = $('#make_buy_offer_form').serializeArray();
+    var post_data = {
+      "symbol": data[0]["value"],
+      "buy_sell": true,
+      "price": parseFloat(data[2]["value"]),
+      "volume": parseInt(data[1]["value"]),
+      "user_id": localStorageService.get('currentUser')
+    }
+    $http.post('/api/stocks', post_data).then(
+      function successCallback(response) {
+        console.log(response);
+        $scope.makingBuyOffer = false;
+        $('#page-mask').hide();
+      }, function errorCallback(response){
+        console.log(response);
+      }
+    );
+  }
 
 });
 

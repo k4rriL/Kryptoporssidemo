@@ -119,6 +119,19 @@ h2 {
 .stock-open-offers td {
   padding-right: 10px;
   padding-bottom: 10px;
+  border-bottom: 1px solid #c6c6c6;
+  padding: 10px;
+}
+
+.stock-open-offers {
+  text-align: center;
+}
+
+.stock-open-offers table {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #c6c6c6;
 }
 
 .navbar-collapse button {

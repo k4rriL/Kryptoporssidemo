@@ -4,7 +4,7 @@
       <h2>My stocks</h2>
     </div>
     <div class="row stocks">
-      <table>
+      <table class="main-table">
         <tr>
           <td>Name</td>
           <td>Sell price</td>
@@ -17,13 +17,13 @@
           <td>{{stock.buy}}€</td>
           <td>{{stock.sell}}€</td>
           <td>{{stock.volume}}</td>
-          <td><a href="{{stock.symbol}}" ng-click="stockPage.sellingStock($event)">Sell</a></td>
+          <td><a href="{{stock.symbol}}" ng-click="stockPage.makeSellOffer($event)">Sell</a></td>
         </tr>
       </table>
     </div>
   </div>
   <div id="page-mask">
   </div>
-  <ng-include ng-show="stockPage.selling" src="'/public/sell_stocks.html'">
+  <ng-include ng-show="stockPage.selling" src="'/public/make_sell_offer.html'">
   </ng-include>
 </div>

@@ -2,13 +2,12 @@
   <h2>Purchase stocks</h2>
   <form id="purchase_form" method="post" target="/buy_stock">
     <label>Stock: </label>
-    <label class="stock-name">{{stockPage.currentStock.symbol}}</label>
-    <input name="symbol" type="text" value="{{stockPage.currentStock.symbol}}" hidden="true">
+    <label class="stock-name">{{symbol}}</label>
+    <input name="symbol" type="text" value="{{symbol}}" hidden="true">
     <label for="amount">Amount:</label>
-    <input name="amount" type="number" value="1">
-    <label for="amount">Price:</label>
-    <input name="price" type="number" value="{{stockPage.currentStock.bid}}" step="0.1"/>
-    <button ng-click="stockPage.buyStock($event)" class="btn btn-click btn-success">Confirm</button>
+    <input name="amount" type="number" max="{{currentOffer.volume}}" min="1" value="{{currentOffer.volume}}">
+    <label for="amount">Price: {{currentOffer.price}}€</label>
+    <button ng-click="buyStock($event)" class="btn btn-click btn-success" ng-show="localStorageService.get('currentUser')">Confirm</button>
   </form>
-  <button ng-click="stockPage.cancelBuying($event)" class="btn btn-click btn-danger">Cancel</button>
+  <button ng-click="cancelBuying($event)" class="btn btn-click btn-danger">Cancel</button>
 </div>
