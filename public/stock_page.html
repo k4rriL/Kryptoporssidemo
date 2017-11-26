@@ -1,31 +1,49 @@
 <div class="container" ng-controller="stockPageController as stock">
-  <div class="col-sm-9 col-md-10 pt-3 main-container">
+  <div class="col-sm-9 col-md-10 pt-3 main-container stock-info-page">
     <div class="row">
-      <div class="stock-info col-sm-5">
-        Stock: <h2>{{stock.symbol}}</h2>
-        <br />
-        Current value: <h3>{{stock.last}}€</h3>
-        <br />
-        Buy price: <h3>{{stock.bid}}€</h3>
-        <br />
-        Sell price: <h3>{{stock.ask}}€</h3>
-        <br />
-        Volume: <h3>{{stock.volume}}</h3>
+      <div class="col-sm-4">
+        <table class="stock-info">
+          <tr>
+            <td>Stock:</td>
+            <td><h2>{{stock.symbol}}</h2></td>
+          </tr>
+          <tr>
+            <td>Current value:</td>
+            <td><h3>{{stock.last}}€</h3></td>
+          </tr>
+          <tr>
+            <td>Buy price:</td>
+            <td><h3>{{stock.bid}}€</h3></td>
+          </tr>
+          <tr>
+            <td>Sell price:</td>
+            <td><h3>{{stock.ask}}</h3></td>
+          </tr>
+          <tr>
+            <td>Volume:</td>
+            <td><h3>{{stock.volume}}€</h3></td>
+          </tr>
+        </table>
       </div>
-      <div class="stock-open-offers col-sm-6">
-        <h3>Open offers</h3>
-        <ul>
-          <li>
-            <p>Amount: 3,  Price: 23.54</p>
-          </li>
-          <li>
-            <p>Amount: 1,  Price: 23.20</p>
-          </li>
-          <li>
-            <p>Amount: 5,  Price: 22.54</p>
-          </li>
-          <td><a href="{{stock.id}}" ng-click="stockPage.buyingStock($event)">Buy</a></td>
-        </ul>
+      <div class="stock-open-offers col-sm-4">
+        <h3>Buying offers</h3>
+        <table>
+          <tr ng-repeat="offer in buy_offers" class='clickable-row' data-href='{{offer.id}}' ng-click="">
+            <td>Price: {{offer.price}}</td>
+            <td>Volume: {{offer.volume}}</td>
+            <!--<td><a href="{{offer.id}}" ng-ctdck="stockPage.buyingStock($event)">Buy</a></td>-->
+          <tr>
+        </table>
+      </div>
+      <div class="stock-open-offers col-sm-4">
+        <h3>Selling offers</h3>
+        <table>
+          <tr ng-repeat="offer in sell_offers" class='clickable-row' data-href='{{offer.id}}'>
+            <td>Price: {{offer.price}}</td>
+            <td>Volume: {{offer.volume}}</td>
+            <!--<td><a href="{{offer.id}}" ng-ctdck="stockPage.buyingStock($event)">Buy</a></td>-->
+          <tr>
+        </table>
       </div>
     </div>
   </div>

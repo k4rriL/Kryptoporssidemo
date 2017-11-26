@@ -23,23 +23,23 @@ h2 {
   text-transform: uppercase;
 }
 
-table {
+.main-table {
   width: 90%;
   margin: auto;
   margin-bottom: 15px;
 }
 
-td {
+.main-table td {
   padding: 10px 20px;
   border-bottom: 1px solid #c6c6c6;
   text-align: center;
 }
 
-tr:last-child > td {
+.main-table tr:last-child > td {
   border-bottom: none;
 }
 
-td a {
+.main-table td a {
   display: block;
   padding: 5px 0px;
   background-color: #b3b3b3;
@@ -47,18 +47,18 @@ td a {
   color: black;
 }
 
-td a:hover {
+.main-table td a:hover {
   background-color: #28a745;
   text-decoration: none;
   color: black;
 }
 
-tr:nth-child(1) > td {
+.main-table tr:nth-child(1) > td {
   background-color: #b3b3b3;
   font-weight: bold;
 }
 
-tr:nth-child(1) {
+.main-table tr:nth-child(1) {
   width: 100%;
 }
 
@@ -100,6 +100,7 @@ tr:nth-child(1) {
 
 .stock-info {
   margin-left: 50px;
+  margin-bottom: 30px;
 }
 
 .stock-info h2, h3 {
@@ -110,13 +111,22 @@ tr:nth-child(1) {
   font-weight: lighter;
 }
 
-.stock-open-offers ul {
-  list-style-type: none;
-  padding: 0;
+.stock-info td {
+  padding-right: 10px;
+  width: 120px;
+}
+
+.stock-open-offers td {
+  padding-right: 10px;
+  padding-bottom: 10px;
 }
 
 .navbar-collapse button {
   margin-right: 10px;
+}
+
+.stock-info-page table {
+
 }
 
 

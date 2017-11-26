@@ -199,9 +199,17 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute'])
 
 
 
-cryptoExchange.controller('stockPageController', function($scope, $routeParams){
+cryptoExchange.controller('stockPageController', function($scope, $routeParams, $http){
     var symbol = $routeParams.id;
     $scope.stock = stocks[symbol];
+    var query = '/api/offers/' + symbol;
+    $http.get(query).then(
+      function successResponse(response){
+        $scope.buy_offers = response.data.bids;
+        $scope.sell_offers = response.data.offers;
+      }, function errorResponse(error){}
+    )
+
 });
 
 cryptoExchange.config(['$routeProvider', '$locationProvider',
