@@ -3,8 +3,9 @@ var app = express();
 var bodyParser = require('body-parser');
 var net = require('net');
 var Promise = require('bluebird');
-var credentials = require("./credentials.json");
+var user_data = require("./user_data.json");
 var CryptoJS = require("crypto-js");
+var fs = require('fs');
 
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
@@ -54,22 +55,40 @@ app.get('/get_list', function(req, res) {
   });
 });
 
+app.post('/change_balance', function(req, res) {
+  var user_id = req.body.user_id;
+  var amount = req.body.amount;
+  var new_balance = 0;
+  for (var i = 0; i < user_data.length; i++) {
+    if (user_id == user_data[i].user_id){
+      user_data[i].balance += amount;
+      new_balance = user_data[i].balance;
+    }
+  }
+  fs.writeFile("./user_data.json", JSON.stringify(user_data), function (err) {
+    if (err) return console.log(err);
+  });
+  res.send({"status": 200, "new_balance": new_balance});
+});
+
 app.post('/login', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
   if(username != null && password != null) {
     var hashed_password = CryptoJS.SHA256(username + password).toString(CryptoJS.enc.Hex);
     var user_id = "";
-    for (var i = 0; i < credentials.length; i++) {
-      if (username == credentials[i].username && hashed_password == credentials[i].password){
-        user_id = credentials[i].user_id;
+    var balance = 0;
+    for (var i = 0; i < user_data.length; i++) {
+      if (username == user_data[i].username && hashed_password == user_data[i].password){
+        user_id = user_data[i].user_id;
+        balance = user_data[i].balance;
       }
     }
 
     if (user_id === ""){
       res.send({"status": 400, "message": "Login failed"});
     } else {
-      res.send({"status": 200, "user_id": user_id});
+      res.send({"status": 200, "user_id": user_id, "balance": balance});
     }
   } else {
     res.send({"status": 400, "message": "Login failed"});

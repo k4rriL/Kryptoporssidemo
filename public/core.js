@@ -8,6 +8,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
     stockPage.adding = false;
     stockPage.currentStock = {};
     stockPage.current_user_stocks = [];
+    stockPage.localStorageService = localStorageService;
 
     stockPage.updateUserStocks = function() {
       //Get users stocks
@@ -54,6 +55,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
     stockPage.current_user_id = localStorageService.get('currentUser');
     if (stockPage.current_user_id){
       stockPage.logged_in = true;
+      stockPage.currentUserBalance = localStorageService.get('currentUserBalance');
       stockPage.updateUserStocks();
     } else {
       stockPage.logged_in = false;
@@ -127,6 +129,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
             stockPage.logged_in = true;
             stockPage.current_user_id = response.data.user_id;
             localStorageService.set('currentUser', response.data.user_id);
+            localStorageService.set('currentUserBalance', response.data.balance);
+            stockPage.currentUserBalance = response.data.balance;
             stockPage.updateUserStocks();
           } else {
             console.log("Login failed, try again")
@@ -220,6 +224,24 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
     }, function errorResponse(error){}
   )
 
+  $scope.updateUserBalance = function (user_id, amount) {
+    var query = 'http://localhost:5005/change_balance';
+    var data = {
+      "user_id": user_id,
+      "amount": amount
+    }
+    $http.post(query, data).then(
+      function successCallback(response) {
+        console.log(response);
+        if (response.data.status == 200){
+          if ($scope.localStorageService.get('currentUser') == user_id){
+              $scope.localStorageService.set('currentUserBalance', response.data.new_balance);
+          }
+        }
+      }, function errorCallback(error){}
+    );
+  }
+
   $scope.buyingStock = function (event) {
     event.preventDefault();
     $scope.buying = true;
@@ -239,11 +261,12 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
     event.stopPropagation();
     if (localStorageService.get('currentUser')){
       var data = $('#purchase_form').serializeArray();
+      var volume = parseInt(data[1]["value"]);
       var post_data = {
         "transaction": {
           "symbol": $scope.symbol,
           "price": $scope.currentOffer.price,
-          "volume": parseInt(data[1]["value"]),
+          "volume": volume,
           "buyer_id": localStorageService.get('currentUser'),
           "seller_id": $scope.currentOffer.user_id
         }
@@ -251,7 +274,10 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
 
       $http.post('/api/stocks', post_data).then(
         function successCallback(response) {
+          $scope.updateUserBalance(localStorageService.get('currentUser'), -$scope.currentOffer.price * volume);
+          $scope.updateUserBalance($scope.currentOffer.user_id, $scope.currentOffer.price * volume);
           $scope.buying = false;
+          $scope.currentOffer = null;
           $('#page-mask').hide();
         }, function errorCallback(response){
         }
@@ -278,11 +304,12 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
     event.stopPropagation();
     if (localStorageService.get('currentUser')){
       var data = $('#sell_form').serializeArray();
+      var volume = parseInt(data[1]["value"]);
       var post_data = {
         "transaction": {
           "symbol": $scope.symbol,
           "price": $scope.currentOffer.price,
-          "volume": parseInt(data[1]["value"]),
+          "volume": volume,
           "seller_id": localStorageService.get('currentUser'),
           "buyer_id": $scope.currentOffer.user_id
         }
@@ -290,6 +317,8 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
 
       $http.post('/api/stocks', post_data).then(
         function successCallback(response) {
+          $scope.updateUserBalance(localStorageService.get('currentUser'), $scope.currentOffer.price * volume);
+          $scope.updateUserBalance($scope.currentOffer.user_id, -$scope.currentOffer.price * volume);
           $scope.currentOffer = null;
           $scope.selling = false;
           $('#page-mask').hide();
