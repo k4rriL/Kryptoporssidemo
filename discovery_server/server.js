@@ -34,25 +34,18 @@ app.use(function (req, res, next) {
 global.list = [];
 
 app.post('/add_new', function(req, res) {
-  console.log("Received post call");
-  //console.log("this is list" + list);
-  queryOnline(function(){
     if(req.body.ip != null && req.body.port != null) {
-      //console.log(req.body);
       list.push({"ip": req.body.ip, "port":req.body.port});
       console.log(list);
       res.send({"status": 200});
     } else {
       res.send({"status": 400, "message": "Ip or port is not defined in request body"})
     }
-  })
 });
 
 //palauta lista
 app.get('/get_list', function(req, res) {
-  queryOnline(function(){
     res.send(list);
-  });
 });
 
 app.post('/change_balance', function(req, res) {
@@ -95,65 +88,6 @@ app.post('/login', function(req, res) {
   }
 });
 
-
-function checkConnection(host, port, timeout) {
-    return new Promise(function(resolve, reject) {
-        timeout = timeout || 10000;     // default of 10 seconds
-        var timer = setTimeout(function() {
-            reject("timeout");
-            socket.end();
-        }, timeout);
-        var socket = net.createConnection(port, host, function() {
-            clearTimeout(timer);
-            resolve();
-            socket.end();
-        });
-        socket.on('error', function(err) {
-            clearTimeout(timer);
-            reject(err);
-        });
-    });
-}
-
-//metodi, joka queryttaa ketä listasta on paikalla ja pitää listaa yllä
-function queryOnline(callback) {
-      //for loopissa i:t läpi, eli listan jäbät
-      var newList = [];
-
-      console.log("list before query");
-      console.log(list);
-
-      if (list.length == 0) {
-        callback();
-        return;
-      }
-
-      //console.log(list);
-
-      for (i = 0; i < list.length; i++) {
-        console.log(list[i]);
-        checkIfOnline(i, function(returnValue){
-          if(returnValue == true){
-            newList.push(list[i]);
-          }
-        })
-      }
-
-      list = newList;
-      callback();
-};
-
-var checkIfOnline = function (client_index, callback) {
-  console.log("list in check");
-  console.log(list);
-  console.log(client_index);
-  console.log(list[client_index]);
-    checkConnection(list[client_index]["ip"], list[client_index]["port"]).then(function() {
-      callback(true);
-  }, function(err) {
-    callback(false);
-  })
-};
 
 app.listen(5005, function() {
     console.log("Listening on port 5005");
