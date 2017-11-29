@@ -223,6 +223,23 @@ module.exports = function(app) {
         res.send(portfolio);
     });
 
+    app.post('/api/add_stock', function(req, res) {
+        var dummy_user_id = "company";
+        var block = {
+            "transaction": {
+                "symbol": req.body.symbol,
+                "full_name": req.body.full_name,
+                "buyer_id": req.body.user_id,
+                "seller_id": dummy_user_id,
+                "price": 0.0,
+                "volume": req.body.volume
+            }
+        }
+        // Should validate data before adding to bc
+        bc.addNewBlock(req.body);
+        res.sendStatus(200);
+    });
+
     function fillWithData() {
         // Order Book test data
         var nok1 = {id: 1, symbol: "NOK", buy_sell: true, price: 5.6, volume: 10000, user_id: "123456"};
