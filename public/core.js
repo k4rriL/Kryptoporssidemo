@@ -172,7 +172,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
         "user_id": stockPage.current_user_id
       }
 
-      $http.post('/api/add', post_data).then(
+      $http.post('/api/add_stock', post_data).then(
         function successCallback(response) {
           console.log(response);
           stockPage.adding = false;
