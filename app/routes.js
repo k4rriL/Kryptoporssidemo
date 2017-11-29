@@ -67,10 +67,11 @@ module.exports = function(app) {
 
     // POST orders/transactions
     app.post('/api/stocks', function(req, res) {
+        console.log(req.body);
         if (req.body.hasOwnProperty("transaction")) {
             bc.addNewBlock(req.body);
         } else {
-            bc.addNewBlock(req.body.data);
+            bc.addNewBlock(req.body);
         }
         //bc.addNewBlock(req.body.data);
         res.sendStatus(200);
