@@ -6,6 +6,8 @@ var Promise = require('bluebird');
 var user_data = require("./user_data.json");
 var CryptoJS = require("crypto-js");
 var fs = require('fs');
+var ip = require('ip');
+console.log(ip.address());
 
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
@@ -37,7 +39,7 @@ app.post('/add_new', function(req, res) {
     if(req.body.ip != null && req.body.port != null) {
       list.push({"ip": req.body.ip, "port":req.body.port});
       console.log(list);
-      res.send({"status": 200});
+      res.send({"addressList": list,"status": 200});
     } else {
       res.send({"status": 400, "message": "Ip or port is not defined in request body"})
     }
@@ -45,7 +47,7 @@ app.post('/add_new', function(req, res) {
 
 //palauta lista
 app.get('/get_list', function(req, res) {
-    res.send(list);
+    res.send({"addressList":list});
 });
 
 app.post('/change_balance', function(req, res) {
