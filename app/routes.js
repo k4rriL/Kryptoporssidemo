@@ -14,9 +14,24 @@ module.exports = function(app) {
 
         for (var i = bc.blockchain.length - 1; i >= 0; i--) {
             var data = bc.blockchain[i].data;
-            if (data.hasOwnProperty("closed")) {
-                close.push(data.closed);
-            } else if (data.hasOwnProperty("id") && close.indexOf(data.id) == -1) {
+            if (data.hasOwnProperty("transaction") &&
+                data.transaction.hasOwnProperty("offer_hash")) {
+                close.push(data.transaction.offer_hash);
+                if (stocks.hasOwnProperty(data.transaction.symbol)) {
+                    if (stocks[data.transaction.symbol].last == null) {
+                        stocks[data.transaction.symbol].last = data.transaction.price;
+                    }
+                } else {
+                    stocks[data.transaction.symbol] = {
+                        last: data.transaction.price,
+                        bid: null,
+                        ask: null,
+                        volume: 0,
+                        symbol: data.transaction.symbol
+                    }
+                }
+            } else if (data.hasOwnProperty("symbol") &&
+                close.indexOf(bc.blockchain[i].hash) == -1) {
                 if (stocks.hasOwnProperty(data.symbol)) {
                     if (data.buy_sell &&
                        (stocks[data.symbol].bid == null || data.price > stocks[data.symbol].bid))  {
@@ -101,16 +116,32 @@ module.exports = function(app) {
 
         for (var i = bc.blockchain.length - 1; i >= 0; i--) {
             var data = bc.blockchain[i].data;
-            if (data.hasOwnProperty("id") && data.symbol.toUpperCase() == symbol.toUpperCase()) {
-                if (closed.indexOf(data.id) == -1) {
+            if (data.hasOwnProperty("transaction") &&
+                data.transaction.hasOwnProperty("offer_hash")) {
+                closed.push(data.transaction.offer_hash);
+            } else if (data.hasOwnProperty("symbol") &&
+                data.symbol.toUpperCase() == symbol.toUpperCase()) {
+                if (closed.indexOf(bc.blockchain[i].hash) == -1) {
                     if (data.buy_sell) {
-                        bids.push(data);
+                        bids.push({
+                            hash: bc.blockchain[i].hash,
+                            symbol: data.symbol,
+                            buy_sell: data.buy_sell,
+                            price: data.price,
+                            volume: data.volume,
+                            user_id: data.user_id
+                        });
                     } else {
-                        offers.push(data);
+                        offers.push({
+                            hash: bc.blockchain[i].hash,
+                            symbol: data.symbol,
+                            buy_sell: data.buy_sell,
+                            price: data.price,
+                            volume: data.volume,
+                            user_id: data.user_id
+                        });
                     }
                 }
-            } else if (data.hasOwnProperty("closed")) {
-                closed.push(data.closed);
             }
         }
 
