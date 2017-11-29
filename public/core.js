@@ -268,7 +268,8 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
           "price": $scope.currentOffer.price,
           "volume": volume,
           "buyer_id": localStorageService.get('currentUser'),
-          "seller_id": $scope.currentOffer.user_id
+          "seller_id": $scope.currentOffer.user_id,
+          "offer_hash": $scope.currentOffer.hash
         }
       }
 
@@ -311,7 +312,8 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
           "price": $scope.currentOffer.price,
           "volume": volume,
           "seller_id": localStorageService.get('currentUser'),
-          "buyer_id": $scope.currentOffer.user_id
+          "buyer_id": $scope.currentOffer.user_id,
+          "offer_hash": $scope.currentOffer.hash
         }
       }
 
