@@ -10,5 +10,7 @@
     <input name="price" type="number" min="0.0" value="{{stock.bid}}" step="0.1" />
     <button ng-click="sendBuyOffer($event)" class="btn btn-click btn-success">Confirm</button>
   </form>
+  <div class="alert alert-warning collapse" id="buy-offer-warning">
+  </div>
   <button ng-click="cancelBuyOffer($event)" class="btn btn-click btn-danger">Cancel</button>
 </div>

@@ -9,5 +9,7 @@
     <label for="amount">Price: {{currentOffer.price}}€</label>
     <button ng-click="buyStock($event)" class="btn btn-click btn-success" ng-show="localStorageService.get('currentUser')">Confirm</button>
   </form>
+  <div class="alert alert-warning collapse" id="buy-warning">
+  </div>
   <button ng-click="cancelBuying($event)" class="btn btn-click btn-danger">Cancel</button>
 </div>

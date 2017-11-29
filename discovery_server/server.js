@@ -42,7 +42,7 @@ app.post('/add_new', function(req,res) {
             console.log(list);
             res.send({"addressList": list,"status": 200});
         } else {
-            res.send({"addressList": list, "status": 200, "message": "Port allready existed in the discovery server list"})
+            res.send({"addressList": list, "status": 200, "message": "Port already existed in the discovery server list"})
         }
     } else {
         res.send({"status": 400, "message": "Ip or port is not defined in request body"})
@@ -70,7 +70,7 @@ app.post('/change_balance', function(req, res) {
   var new_balance = 0;
   for (var i = 0; i < user_data.length; i++) {
     if (user_id == user_data[i].user_id){
-      user_data[i].balance += amount;
+      user_data[i].balance = Math.round((user_data[i].balance + amount) * 100) / 100;
       new_balance = user_data[i].balance;
     }
   }
