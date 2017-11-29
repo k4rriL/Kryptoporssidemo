@@ -67,13 +67,8 @@ module.exports = function(app) {
 
     // POST orders/transactions
     app.post('/api/stocks', function(req, res) {
-        console.log(req.body);
-        if (req.body.hasOwnProperty("transaction")) {
-            bc.addNewBlock(req.body);
-        } else {
-            bc.addNewBlock(req.body);
-        }
-        //bc.addNewBlock(req.body.data);
+        // Should validate data before adding to bc
+        bc.addNewBlock(req.body);
         res.sendStatus(200);
     });
 
