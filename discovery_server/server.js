@@ -37,7 +37,7 @@ global.list = [];
 
 app.post('/add_new', function(req,res) {
     if(req.body.ip != null && req.body.port != null) {
-        if(list.indexOf({"ip":req.body.ip, "port":req.body.port}) == -1) {
+        if( !contains(list, req.body.port)) {
             list.push({"ip": req.body.ip, "port":req.body.port});
             console.log(list);
             res.send({"addressList": list,"status": 200});
@@ -48,6 +48,16 @@ app.post('/add_new', function(req,res) {
         res.send({"status": 400, "message": "Ip or port is not defined in request body"})
     }
 })
+
+var contains = function(list, port) {
+    var bool = false;
+    for (i = 0; i < list.length; i++) {
+        if(list[i].port === port){
+            bool = true;
+        }
+    }
+    return bool;
+}
 
 //palauta lista
 app.get('/get_list', function(req, res) {
