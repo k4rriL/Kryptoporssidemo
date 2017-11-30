@@ -1,7 +1,6 @@
 'use strict';
 var CryptoJS = require("crypto-js");
 var request = require("request");
-var port = process.env.PORT;
 
 // A single block in blockchain
 class Block {
@@ -51,17 +50,14 @@ var addBlock = (newBlock) => {
 
 var postBlock = (newBlock, route) => {
     if (global.list != null) {
-        console.log(global.list);
         for (var i = 0; i < global.list.length; i++) {
-            if (global.list[i].port != port) {
+            if (global.list[i].port != global.port) {
                 request({
                     url: "http://" + global.list[i].ip + ":" + global.list[i].port + route,
                     method: "POST",
                     json: true,
                     body: newBlock
-                }, function (error, response, body){
-                    console.log(response);
-                });
+                }, function (error, response, body){});
             }
         }
     }
