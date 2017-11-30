@@ -24,7 +24,7 @@ app.get('/*', function(req, res) {
 app.listen(port);
 console.log("App listening on port " + port);
 
-var list = [];
+global.list = [];
 
 var options = {
     url: 'http://10.100.61.5:5005/add_new',
@@ -34,9 +34,7 @@ var options = {
 
 request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
-        //console.log(body)
         list = JSON.parse(body).addressList;
-        console.log(list);
     }
 })
 
