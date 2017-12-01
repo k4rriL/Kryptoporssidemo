@@ -293,15 +293,24 @@ module.exports = function(app) {
 
     function fillWithData() {
         // Order Book test data
-        var nok1 = {id: 1, symbol: "NOK", buy_sell: true, price: 5.6, volume: 10000, user_id: "abcde9"};
-        var nok2 = {id: 2, symbol: "NOK", buy_sell: false, price: 5.7, volume: 8000, user_id: "121298"};
-        var nok3 = {id: 3, symbol: "NOK", buy_sell: true, price: 5.5, volume: 4500, user_id: "909012"};
-        var nok4 = {id: 4, symbol: "NOK", buy_sell: false, price: 5.65, volume: 3300, user_id: "abcdef"};
-        var kon1 = {id: 5, symbol: "KON", buy_sell: true, price: 40.3, volume: 500, user_id: "120932"};
-        var kon2 = {id: 6, symbol: "KON", buy_sell: false, price: 40.5, volume: 12500, user_id: "901287"};
-        var kon3 = {id: 7, symbol: "KON", buy_sell: true, price: 40.1, volume: 8000, user_id: "987898"};
-        var kon4 = {id: 8, symbol: "KON", buy_sell: false, price: 40.35, volume: 750, user_id: "989898"};
-        var kon3 = {id: 9, symbol: "KON", buy_sell: true, price: 40.45, volume: 800, user_id: "909090"};
+        var nok1 = {id: 1, symbol: "NOK", buy_sell: true, price: 5.6, volume: 10000, user_id: "abcde9",
+            offer_id: "ababab"};
+        var nok2 = {id: 2, symbol: "NOK", buy_sell: false, price: 5.7, volume: 8000, user_id: "121298",
+            offer_id: "abcdef"};
+        var nok3 = {id: 3, symbol: "NOK", buy_sell: true, price: 5.5, volume: 4500, user_id: "909012",
+            offer_id: "909091"};
+        var nok4 = {id: 4, symbol: "NOK", buy_sell: false, price: 5.65, volume: 3300, user_id: "abcdef",
+            offer_id: "abcde9"};
+        var kon1 = {id: 5, symbol: "KON", buy_sell: true, price: 40.3, volume: 500, user_id: "120932",
+            offer_id: "90192"};
+        var kon2 = {id: 6, symbol: "KON", buy_sell: false, price: 40.5, volume: 12500, user_id: "901287",
+            offer_id: "001122"};
+        var kon3 = {id: 7, symbol: "KON", buy_sell: true, price: 40.1, volume: 8000, user_id: "987898",
+            offer_id: "hhggjj"};
+        var kon4 = {id: 8, symbol: "KON", buy_sell: false, price: 40.35, volume: 750, user_id: "989898",
+            offer_id: "12309j"};
+        var kon3 = {id: 9, symbol: "KON", buy_sell: true, price: 40.45, volume: 800, user_id: "909090",
+            offer_id: "901287"};
 
         var nok1_close = {closed: 1};
 
