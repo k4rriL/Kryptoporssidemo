@@ -125,9 +125,10 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       event.preventDefault();
       var query = $('#search-form').serializeArray()[0]["value"].toLowerCase();
       var stocks_query = [];
-      for (let i of stockPage.stocks) {
-        if (i.full_name.toLowerCase().includes(query) || i.symbol.toLowerCase().includes(query)){
-          stocks_query.push(i);
+      var keys = Object.keys(stockPage.stocks);
+      for (let i of keys) {
+        if (stockPage.stocks[i].symbol.toLowerCase().includes(query)){
+          stocks_query.push(stockPage.stocks[i]);
         }
       }
       stockPage.main_stocks = stocks_query;
