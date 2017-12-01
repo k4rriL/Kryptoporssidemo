@@ -45,13 +45,17 @@ var calculateHashForBlock = (block) => {
 var addBlock = (newBlock) => {
     if(isValidNewBlock(newBlock, getLatestBlock())) {
         blockchain.push(newBlock);
+        console.log(newBlock);
     }
 };
 
 var postBlock = (newBlock, route) => {
+  console.log("sending block");
+  console.log(global.list);
     if (global.list != null) {
         for (var i = 0; i < global.list.length; i++) {
             if (global.list[i].port != global.port) {
+              console.log("asd" + global.port);
                 request({
                     url: "http://" + global.list[i].ip + ":" + global.list[i].port + route,
                     method: "POST",
@@ -113,3 +117,4 @@ module.exports.addBlock = addBlock;
 module.exports.blockchain = blockchain;
 module.exports.generateNextBlock = generateNextBlock;
 module.exports.postBlock = postBlock;
+module.exports.getLatestBlock = getLatestBlock;

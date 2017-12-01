@@ -91,7 +91,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
           "buy_sell": false,
           "price": parseFloat(data[2]["value"]),
           "volume": volume,
-          "user_id": stockPage.current_user_id
+          "user_id": stockPage.current_user_id,
+          "offer_id": new Date().getTime()
         }
 
         $http.post('/api/stocks', post_data).then(
@@ -289,7 +290,7 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
             "volume": volume,
             "buyer_id": localStorageService.get('currentUser'),
             "seller_id": $scope.currentOffer.user_id,
-            "offer_hash": $scope.currentOffer.hash
+            "offer_id": $scope.currentOffer.offer_id
           }
         }
 
@@ -341,7 +342,7 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
             "volume": volume,
             "seller_id": localStorageService.get('currentUser'),
             "buyer_id": $scope.currentOffer.user_id,
-            "offer_hash": $scope.currentOffer.hash
+            "offer_id": $scope.currentOffer.offer_id
           }
         }
 
@@ -386,7 +387,8 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
         "buy_sell": true,
         "price": price,
         "volume": volume,
-        "user_id": localStorageService.get('currentUser')
+        "user_id": localStorageService.get('currentUser'),
+        "offer_id": new Date().getTime()
       }
       $http.post('/api/stocks', post_data).then(
         function successCallback(response) {
