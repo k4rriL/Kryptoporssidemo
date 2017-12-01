@@ -180,6 +180,46 @@ module.exports = function(app) {
         res.send({bids: bids, offers: offers});
     });
 
+    app.get('/api/my_offers/:user_id', function(req, res) {
+        var user_id = req.params.user_id;
+        var bids = [];
+        var offers = [];
+        var closed = [];
+
+        for (var i = bc.blockchain.length - 1; i >= 0; i--) {
+            var data = bc.blockchain[i].data;
+            if (data.hasOwnProperty("transaction") &&
+                data.transaction.hasOwnProperty("offer_id")) {
+                closed.push(data.transaction.offer_id);
+            } else if (data.hasOwnProperty("user_id") &&
+                data.user_id.toUpperCase() == user_id.toUpperCase()) {
+                if (closed.indexOf(data.offer_id) == -1) {
+                    if (data.buy_sell) {
+                        bids.push({
+                            offer_id: data.offer_id,
+                            symbol: data.symbol,
+                            buy_sell: data.buy_sell,
+                            price: data.price,
+                            volume: data.volume,
+                            user_id: data.user_id
+                        });
+                    } else {
+                        offers.push({
+                            offer_id: data.offer_id,
+                            symbol: data.symbol,
+                            buy_sell: data.buy_sell,
+                            price: data.price,
+                            volume: data.volume,
+                            user_id: data.user_id
+                        });
+                    }
+                }
+            }
+        }
+        
+        res.send({bids: bids, offers: offers});
+    });
+
     // GET all transaction history
     app.get('/api/transactions/', function(req, res) {
         var transactions = [];
