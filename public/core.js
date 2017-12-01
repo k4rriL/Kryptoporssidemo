@@ -81,32 +81,44 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       var data = $('#make_sell_offer_form').serializeArray();
       var symbol = data[0]["value"];
       var volume = parseInt(data[1]["value"])
-      if (volume > stockPage.current_user_stocks[symbol].volume || volume < 0){
-        $("#sell-offer-warning").html("You don't have that many stocks");
-        $("#sell-offer-warning").show();
-      } else {
-        $("#sell-offer-warning").hide();
-        var post_data = {
-          "symbol": symbol,
-          "buy_sell": false,
-          "price": parseFloat(data[2]["value"]),
-          "volume": volume,
-          "user_id": stockPage.current_user_id,
-          "offer_id": new Date().getTime()
-        }
 
-        $http.post('/api/stocks', post_data).then(
-          function successCallback(response) {
-            console.log(response);
-            stockPage.currentStock = null;
-            stockPage.selling = false;
-            stockPage.updateUserStocks();
-            $('#page-mask').hide();
-          }, function errorCallback(response){
-            console.log(response);
+      //get users my_offers
+      $http.get('/api/my_offers/' + stockPage.current_user_id).then(
+        function successCallback(response){
+          console.log(response.data);
+          var current = response.data.offers;
+          var total_volume = 0;
+
+
+          if (volume > stockPage.current_user_stocks[symbol].volume || volume < 0){
+            $("#sell-offer-warning").html("You don't have that many stocks");
+            $("#sell-offer-warning").show();
+          } else {
+            $("#sell-offer-warning").hide();
+            var post_data = {
+              "symbol": symbol,
+              "buy_sell": false,
+              "price": parseFloat(data[2]["value"]),
+              "volume": volume,
+              "user_id": stockPage.current_user_id,
+              "offer_id": new Date().getTime()
+            }
+
+            $http.post('/api/stocks', post_data).then(
+              function successCallback(response) {
+                console.log(response);
+                stockPage.currentStock = null;
+                stockPage.selling = false;
+                stockPage.updateUserStocks();
+                $('#page-mask').hide();
+              }, function errorCallback(response){
+                console.log(response);
+              }
+            );
           }
-        );
-      }
+        }, function errorCallback(response){}
+      );
+
     }
 
     stockPage.searchStocks = function (event) {
