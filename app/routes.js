@@ -234,7 +234,7 @@ module.exports = function(app) {
         var user_id = req.params.user_id;
         var portfolio = {};
 
-        for (var i = bc.blockchain.length - 1; i >= 0; i--) {
+        for (var i = 0;i <= bc.blockchain.length - 1; i++) {
             var data = bc.blockchain[i].data;
             if (data.hasOwnProperty("transaction")) {
                 if (data.transaction.seller_id.toUpperCase() == user_id.toUpperCase()) {
