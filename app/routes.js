@@ -230,7 +230,7 @@ module.exports = function(app) {
                 }
             }
         }
-        
+
         res.send({bids: bids, offers: offers});
     });
 
@@ -320,24 +320,12 @@ module.exports = function(app) {
             }
         }
         // Should validate data before adding to bc
-        bc.addNewBlock(req.body);
-        bc.postBlock(req.body, '/api/add_stock/recieve')
+        bc.addNewBlock(block);
+        bc.postBlock(block, '/api/add_stock/recieve')
         res.sendStatus(200);
     });
 
     app.post('/api/add_stock/recieve', function(req, res) {
-        var dummy_user_id = "company";
-        var block = {
-            "transaction": {
-                "symbol": req.body.symbol,
-                "full_name": req.body.full_name,
-                "buyer_id": req.body.user_id,
-                "seller_id": dummy_user_id,
-                "price": 0.0,
-                "volume": req.body.volume
-            }
-        }
-        // Should validate data before adding to bc
         bc.addNewBlock(req.body);
         res.sendStatus(200);
     });
