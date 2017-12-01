@@ -1,6 +1,7 @@
 'use strict';
 var CryptoJS = require("crypto-js");
 var request = require("request");
+var ip = require("ip");
 
 // A single block in blockchain
 class Block {
@@ -45,13 +46,29 @@ var calculateHashForBlock = (block) => {
 var addBlock = (newBlock) => {
     if(isValidNewBlock(newBlock, getLatestBlock())) {
         blockchain.push(newBlock);
-        console.log(newBlock);
+        //console.log(newBlock);
     }
 };
 
 var postBlock = (newBlock, route) => {
-  console.log("sending block");
-  console.log(global.list);
+
+    var options = {
+        url: 'http://localhost:5005/get_list',
+        method: 'GET',
+        form: {'ip': ip.address(), 'port': global.port}
+    };
+    console.log("POSTING LIST ###################")
+    request(options, function(error, response, body) {
+        console.log(error)
+        console.log(response.statusCode)
+        if (!error && response.statusCode == 200) {
+            console.log("Got here")
+            global.list = JSON.parse(body).addressList;
+        }
+    });
+
+    console.log("sending block");
+    console.log(global.list);
     if (global.list != null) {
         for (var i = 0; i < global.list.length; i++) {
             if (global.list[i].port != global.port) {

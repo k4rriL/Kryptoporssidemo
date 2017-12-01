@@ -30,10 +30,10 @@ var options = {
     url: 'http://localhost:5005/add_new',
     method: 'POST',
     form: {'ip': ip.address(), 'port': port}
-}
+};
 
 request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
         list = JSON.parse(body).addressList;
     }
-})
+});
