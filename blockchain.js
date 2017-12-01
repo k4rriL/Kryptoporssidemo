@@ -46,7 +46,7 @@ var calculateHashForBlock = (block) => {
 var addBlock = (newBlock) => {
     if(isValidNewBlock(newBlock, getLatestBlock())) {
         blockchain.push(newBlock);
-        //console.log(newBlock);
+        console.log(newBlock);
     }
 };
 

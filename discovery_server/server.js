@@ -74,9 +74,7 @@ app.post('/change_balance', function(req, res) {
       new_balance = user_data[i].balance;
     }
   }
-  fs.writeFile("./user_data.json", JSON.stringify(user_data), function (err) {
-    if (err) return console.log(err);
-  });
+  fs.writeFileSync("./user_data.json", JSON.stringify(user_data));
   res.send({"status": 200, "new_balance": new_balance});
 });
 
