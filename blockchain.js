@@ -36,7 +36,7 @@ var generateNextBlock = (blockData) => {
 };
 
 var calculateHash = (index, previousHash, timestamp, data) => {
-    return CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+    return CryptoJS.SHA256(index + previousHash + data).toString();
 };
 
 var calculateHashForBlock = (block) => {
@@ -64,24 +64,25 @@ var postBlock = (newBlock, route) => {
         if (!error && response.statusCode == 200) {
             console.log("Got here")
             global.list = JSON.parse(body).addressList;
+            console.log("sending block");
+            console.log(global.list);
+            if (global.list != null) {
+                for (var i = 0; i < global.list.length; i++) {
+                    if (global.list[i].port != global.port) {
+                      console.log("asd" + global.port);
+                        request({
+                            url: "http://" + global.list[i].ip + ":" + global.list[i].port + route,
+                            method: "POST",
+                            json: true,
+                            body: newBlock
+                        }, function (error, response, body){});
+                    }
+                }
+            }
         }
     });
 
-    console.log("sending block");
-    console.log(global.list);
-    if (global.list != null) {
-        for (var i = 0; i < global.list.length; i++) {
-            if (global.list[i].port != global.port) {
-              console.log("asd" + global.port);
-                request({
-                    url: "http://" + global.list[i].ip + ":" + global.list[i].port + route,
-                    method: "POST",
-                    json: true,
-                    body: newBlock
-                }, function (error, response, body){});
-            }
-        }
-    }
+
 };
 
 var addNewBlock = (data) => {
