@@ -85,8 +85,6 @@ module.exports = function(app) {
         // Should validate data before adding to bc
         bc.addNewBlock(req.body);
 
-        console.log(req.body);
-
         // If the transaction's volume is lesser than the offer's volume
         // we close the offer and create a new offer with the offer's volume
         // minus the transaction's volume
