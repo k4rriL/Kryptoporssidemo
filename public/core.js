@@ -288,36 +288,42 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
     event.preventDefault();
     event.stopPropagation();
     if (localStorageService.get('currentUser')){
-      var data = $('#purchase_form').serializeArray();
-      var volume = parseInt(data[1]["value"]);
-
-      if (volume * $scope.currentOffer.price > localStorageService.get('currentUserBalance')){
-        $("#buy-warning").html("You don't have enough balance on your account to purchase");
-        $("#buy-warning").show();
-      } else {
+      if (localStorageService.get('currentUser')!== $scope.currentOffer.user_id){
         $("#buy-warning").hide();
-        var post_data = {
-          "transaction": {
-            "symbol": $scope.symbol,
-            "price": $scope.currentOffer.price,
-            "volume": volume,
-            "buyer_id": localStorageService.get('currentUser'),
-            "seller_id": $scope.currentOffer.user_id,
-            "offer_id": $scope.currentOffer.offer_id
-          }
-        }
+        var data = $('#purchase_form').serializeArray();
+        var volume = parseInt(data[1]["value"]);
 
-        $http.post('/api/stocks', post_data).then(
-          function successCallback(response) {
-            $scope.updateUserBalance(localStorageService.get('currentUser'), -$scope.currentOffer.price * volume);
-            $scope.updateUserBalance($scope.currentOffer.user_id, $scope.currentOffer.price * volume);
-            $scope.updateOffers();
-            $scope.buying = false;
-            $scope.currentOffer = null;
-            $('#page-mask').hide();
-          }, function errorCallback(response){
+        if (volume * $scope.currentOffer.price > localStorageService.get('currentUserBalance')){
+          $("#buy-warning").html("You don't have enough balance on your account to purchase");
+          $("#buy-warning").show();
+        } else {
+          $("#buy-warning").hide();
+          var post_data = {
+            "transaction": {
+              "symbol": $scope.symbol,
+              "price": $scope.currentOffer.price,
+              "volume": volume,
+              "buyer_id": localStorageService.get('currentUser'),
+              "seller_id": $scope.currentOffer.user_id,
+              "offer_id": $scope.currentOffer.offer_id
+            }
           }
-        );
+
+          $http.post('/api/stocks', post_data).then(
+            function successCallback(response) {
+              $scope.updateUserBalance(localStorageService.get('currentUser'), -$scope.currentOffer.price * volume);
+              $scope.updateUserBalance($scope.currentOffer.user_id, $scope.currentOffer.price * volume);
+              $scope.updateOffers();
+              $scope.buying = false;
+              $scope.currentOffer = null;
+              $('#page-mask').hide();
+            }, function errorCallback(response){
+            }
+          );
+        }
+      } else {
+        $("#buy-warning").html("You can't complete your own order");
+        $("#buy-warning").show();
       }
     }
   }
@@ -341,35 +347,42 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
     event.stopPropagation();
 
     if (localStorageService.get('currentUser')){
-      var data = $('#sell_form').serializeArray();
-      var volume = parseInt(data[1]["value"]);
-      if (volume > JSON.parse(localStorageService.get("currentUserStocks"))[$scope.symbol].volume || volume < 0){
-        $("#sell-warning").html("You don't have that many stocks");
-        $("#sell-warning").show();
-      } else {
+      if (localStorageService.get('currentUser')!== $scope.currentOffer.user_id){
         $("#sell-warning").hide();
-        var post_data = {
-          "transaction": {
-            "symbol": $scope.symbol,
-            "price": $scope.currentOffer.price,
-            "volume": volume,
-            "seller_id": localStorageService.get('currentUser'),
-            "buyer_id": $scope.currentOffer.user_id,
-            "offer_id": $scope.currentOffer.offer_id
+        var data = $('#sell_form').serializeArray();
+        var volume = parseInt(data[1]["value"]);
+        if (volume > JSON.parse(localStorageService.get("currentUserStocks"))[$scope.symbol].volume || volume < 0){
+          $("#sell-warning").html("You don't have that many stocks");
+          $("#sell-warning").show();
+        } else {
+          $("#sell-warning").hide();
+          var post_data = {
+            "transaction": {
+              "symbol": $scope.symbol,
+              "price": $scope.currentOffer.price,
+              "volume": volume,
+              "seller_id": localStorageService.get('currentUser'),
+              "buyer_id": $scope.currentOffer.user_id,
+              "offer_id": $scope.currentOffer.offer_id
+            }
           }
-        }
 
-        $http.post('/api/stocks', post_data).then(
-          function successCallback(response) {
-            $scope.updateUserBalance(localStorageService.get('currentUser'), $scope.currentOffer.price * volume);
-            $scope.updateUserBalance($scope.currentOffer.user_id, -$scope.currentOffer.price * volume);
-            $scope.updateOffers();
-            $scope.currentOffer = null;
-            $scope.selling = false;
-            $('#page-mask').hide();
-          }, function errorCallback(response){
-          }
-        );
+          $http.post('/api/stocks', post_data).then(
+            function successCallback(response) {
+              $scope.updateUserBalance(localStorageService.get('currentUser'), $scope.currentOffer.price * volume);
+              $scope.updateUserBalance($scope.currentOffer.user_id, -$scope.currentOffer.price * volume);
+              $scope.updateOffers();
+              $scope.currentOffer = null;
+              $scope.selling = false;
+              $('#page-mask').hide();
+            }, function errorCallback(response){
+            }
+          );
+        }
+      }
+      else {
+        $("#sell-warning").html("You can't complete your own offer");
+        $("#sell-warning").show();
       }
     }
   }
