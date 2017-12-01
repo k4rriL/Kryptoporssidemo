@@ -89,10 +89,12 @@ module.exports = function(app) {
         // If the transaction's volume is lesser than the offer's volume
         // we close the offer and create a new offer with the offer's volume
         // minus the transaction's volume
+
         if (req.body.hasOwnProperty("transaction") &&
-            req.body.transaction.hasOwnProperty("offer_hash")) {
+            req.body.transaction.hasOwnProperty("offer_id")) {
+            console.log(req.body);
             for (var i = bc.blockchain.length - 1; i >= 0; i--) {
-                if (bc.blockchain[i].hash == req.body.transaction.offer_hash &&
+                if (bc.blockchain[i].data.offer_id == req.body.transaction.offer_id &&
                     bc.blockchain[i].data.volume > req.body.transaction.volume) {
                     var oldOffer = bc.blockchain[i].data;
                     var newOffer = {
@@ -100,7 +102,8 @@ module.exports = function(app) {
                         buy_sell: oldOffer.buy_sell,
                         price: oldOffer.price,
                         volume: oldOffer.volume - req.body.transaction.volume,
-                        user_id: oldOffer.user_id
+                        user_id: oldOffer.user_id,
+                        offer_id: new Date().getTime()
                     }
                     bc.addNewBlock(newOffer);
                     bc.postBlock(newOffer, '/api/stocks/recieve');
