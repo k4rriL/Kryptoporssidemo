@@ -445,3 +445,8 @@ cryptoExchange.config(['$routeProvider', '$locationProvider',
         });
     }
 ]);
+
+cryptoExchange.config(function (localStorageServiceProvider) {
+  localStorageServiceProvider
+    .setStorageType('sessionStorage')
+});
