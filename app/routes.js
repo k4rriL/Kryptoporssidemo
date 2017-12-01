@@ -85,6 +85,29 @@ module.exports = function(app) {
         // Should validate data before adding to bc
         bc.addNewBlock(req.body);
         bc.postBlock(req.body, '/api/stocks/recieve');
+
+        // If the transaction's volume is lesser than the offer's volume
+        // we close the offer and create a new offer with the offer's volume
+        // minus the transaction's volume
+        if (req.body.hasOwnProperty("transaction") &&
+            req.body.transaction.hasOwnProperty("offer_hash")) {
+            for (var i = bc.blockchain.length - 1; i >= 0; i--) {
+                if (bc.blockchain[i].hash == req.body.transaction.offer_hash &&
+                    bc.blockchain[i].data.volume > req.body.transaction.volume) {
+                    var oldOffer = bc.blockchain[i].data;
+                    var newOffer = {
+                        symbol: oldOffer.symbol,
+                        buy_sell: oldOffer.buy_sell,
+                        price: oldOffer.price,
+                        volume: oldOffer.volume - req.body.transaction.volume,
+                        user_id: oldOffer.user_id
+                    }
+                    bc.addNewBlock(newOffer);
+                    bc.postBlock(newOffer, '/api/stocks/recieve');
+                    break;
+                }
+            }
+        }
         res.sendStatus(200);
     });
 
