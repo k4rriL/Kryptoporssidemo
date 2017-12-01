@@ -27,7 +27,7 @@
       </div>
       <div class="stock-open-offers col-sm-4">
         <h3>Buying</h3>
-        <table>
+        <table class="buy-offers">
           <tr ng-repeat="offer in buy_offers" class="clickable-row" ng-click="sellingStock($event)">
             <td>Price: {{offer.price}}€</td>
             <td>Volume: {{offer.volume}}</td>
@@ -38,7 +38,7 @@
       </div>
       <div class="stock-open-offers col-sm-4">
         <h3>Selling</h3>
-        <table>
+        <table class="sell-offers">
           <tr ng-repeat="offer in sell_offers" class="clickable-row" ng-click="buyingStock($event)">
             <td>Price: {{offer.price}}€</td>
             <td>Volume: {{offer.volume}}</td>

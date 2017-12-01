@@ -237,6 +237,19 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
   }
   $scope.updateOffers();
 
+  $(document).ready( function (){
+    for (i = 0; i < $scope.buy_offers.length; i++){
+      if ($scope.buy_offers[i].user_id == $scope.localStorageService.get('currentUser')){
+        $(".buy-offers tr:nth-child(" + (i + 1) + ")").addClass("owned");
+      }
+    }
+    for (i = 0; i < $scope.sell_offers.length; i++){
+      if ($scope.sell_offers[i].user_id == $scope.localStorageService.get('currentUser')){
+        $(".sell-offers tr:nth-child(" + (i + 1) + ")").addClass("owned");
+      }
+    }
+
+  });
 
 
   $scope.updateUserBalance = function (user_id, amount) {
