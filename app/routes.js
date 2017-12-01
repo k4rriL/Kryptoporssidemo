@@ -30,6 +30,8 @@ module.exports = function(app) {
                         symbol: data.transaction.symbol
                     }
                 }
+            } else if (data.hasOwnProperty("closed")) {
+                close.push(data.closed);
             } else if (data.hasOwnProperty("symbol") &&
                 close.indexOf(data.offer_id) == -1) {
                 if (stocks.hasOwnProperty(data.symbol)) {
@@ -113,6 +115,14 @@ module.exports = function(app) {
         res.sendStatus(200);
     });
 
+    // GET, closes offer
+    app.get('/api/close/:offer_id', function(req, res) {
+        var offer_id = parseInt(req.params.offer_id, 10);
+        var close = {closed: offer_id};
+        bc.addNewBlock(close);
+        res.send("Offer " + offer_id + " closed");
+    });
+
     // Does exactly the same as up, but does not post block to everyone
     app.post('/api/stocks/recieve', function(req, res) {
         bc.addNewBlock(req.body);
@@ -151,6 +161,8 @@ module.exports = function(app) {
             if (data.hasOwnProperty("transaction") &&
                 data.transaction.hasOwnProperty("offer_id")) {
                 closed.push(data.transaction.offer_id);
+            } else if (data.hasOwnProperty("closed")) {
+                closed.push(data.closed);
             } else if (data.hasOwnProperty("symbol") &&
                 data.symbol.toUpperCase() == symbol.toUpperCase()) {
                 if (closed.indexOf(data.offer_id) == -1) {
@@ -191,6 +203,8 @@ module.exports = function(app) {
             if (data.hasOwnProperty("transaction") &&
                 data.transaction.hasOwnProperty("offer_id")) {
                 closed.push(data.transaction.offer_id);
+            } else if (data.hasOwnProperty("closed")) {
+                closed.push(data.closed);
             } else if (data.hasOwnProperty("user_id") &&
                 data.user_id.toUpperCase() == user_id.toUpperCase()) {
                 if (closed.indexOf(data.offer_id) == -1) {
