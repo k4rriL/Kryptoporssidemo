@@ -15,7 +15,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 
-
     <title>StockChain</title>
 
   </head>
@@ -42,7 +41,7 @@
             <input name="password" class="form-control mr-sm-2" type="password" placeholder="Password">
             <button class="btn btn-outline-primary my-2 my-sm-0" ng-click="stockPage.login($event)">Login</button>
           </form>
-          <p ng-show="stockPage.logged_in">Account balance: {{stockPage.localStorageService.get('currentUserBalance')}}€</p>
+          <p ng-show="stockPage.logged_in">Account balance: {{stockPage.localStorageService.get(stockPage.port  + '.currentUserBalance')}}€</p>
           <button class="btn btn-outline-success my-2 my-sm-0" ng-show="stockPage.logged_in" ng-click="stockPage.addStocks($event)">Add stocks</button>
           <button class="btn btn-outline-warning my-2 my-sm-0" ng-show="stockPage.logged_in" ng-click="stockPage.logout($event)">Logout</button>
           <form id="search-form" class="form-inline mt-2 mt-md-0">
@@ -64,5 +63,5 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-  </body>
+    </body>
 </html>

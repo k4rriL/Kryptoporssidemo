@@ -1,5 +1,5 @@
 <div class="container" ng-controller="stockPageController as stock">
-  <div class="col-sm-9 col-md-10 pt-3 main-container stock-info-page">
+  <div class="col-sm-12 col-md-12 pt-3 main-container stock-info-page">
     <div class="row">
       <div class="col-sm-4">
         <table class="stock-info">
@@ -31,10 +31,11 @@
           <tr ng-repeat="offer in buy_offers" class="clickable-row" ng-click="sellingStock($event)">
             <td>Price: {{offer.price}}€</td>
             <td>Volume: {{offer.volume}}</td>
+            <td><a class="btn btn-outline-danger" ng-show="localStorageService.get(port  + '.currentUser') == offer.user_id" ng-click="cancelYourOffer($event)" href="{{offer.offer_id}}">Delete</a></td>
           </tr>
         </table>
-        <button ng-click="makeBuyOffer($event)" class="btn btn-click btn-outline-primary" ng-show="localStorageService.get('currentUser')">Make a buy offer</button>
-        <p ng-show="!localStorageService.get('currentUser')">Buy stocks by logging in</p>
+        <button ng-click="makeBuyOffer($event)" class="btn btn-click btn-outline-primary" ng-show="localStorageService.get(port  + '.currentUser')">Make a buy offer</button>
+        <p ng-show="!localStorageService.get(port  + '.currentUser')">Buy stocks by logging in</p>
       </div>
       <div class="stock-open-offers col-sm-4">
         <h3>Selling</h3>
@@ -42,11 +43,11 @@
           <tr ng-repeat="offer in sell_offers" class="clickable-row" ng-click="buyingStock($event)">
             <td>Price: {{offer.price}}€</td>
             <td>Volume: {{offer.volume}}</td>
-            <td><a class="btn btn-outline-warning" ng-click="cancelYourOffer($event)" href="{{offer.offer_id}}">Cancel</a></td>
+            <td><a class="btn btn-outline-danger" ng-show="localStorageService.get(port + '.currentUser') == offer.user_id" ng-click="cancelYourOffer($event)" href="{{offer.offer_id}}">Delete</a></td>
           </tr>
         </table>
-        <a href="/#!/my_stocks" class="btn btn-click btn-outline-primary" ng-show="localStorageService.get('currentUser')">Sell your stocks</a>
-        <p ng-show="!localStorageService.get('currentUser')">Sell stocks by logging in</p>
+        <a href="/#!/my_stocks" class="btn btn-click btn-outline-primary" ng-show="localStorageService.get(port  + '.currentUser')">Sell your stocks</a>
+        <p ng-show="!localStorageService.get(port  + '.currentUser')">Sell stocks by logging in</p>
       </div>
     </div>
   </div>

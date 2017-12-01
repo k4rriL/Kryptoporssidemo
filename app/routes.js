@@ -120,6 +120,7 @@ module.exports = function(app) {
         var offer_id = parseInt(req.params.offer_id, 10);
         var close = {closed: offer_id};
         bc.addNewBlock(close);
+        bc.postBlock(close, '/api/stocks/recieve')
         res.send("Offer " + offer_id + " closed");
     });
 
@@ -303,6 +304,14 @@ module.exports = function(app) {
                     }
                 }
             }
+        }
+
+        //delete if amount is 0
+        var keys = Object.keys(portfolio);
+        for (var key in portfolio){
+          if (portfolio[key] <= 0){
+            delete portfolio[key];
+          }
         }
         res.send(portfolio);
     });
