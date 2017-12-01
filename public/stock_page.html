@@ -42,6 +42,7 @@
           <tr ng-repeat="offer in sell_offers" class="clickable-row" ng-click="buyingStock($event)">
             <td>Price: {{offer.price}}€</td>
             <td>Volume: {{offer.volume}}</td>
+            <td><a class="btn btn-outline-warning" ng-click="cancelYourOffer($event)" href="{{offer.offer_id}}">Cancel</a></td>
           </tr>
         </table>
         <a href="/#!/my_stocks" class="btn btn-click btn-outline-primary" ng-show="localStorageService.get('currentUser')">Sell your stocks</a>

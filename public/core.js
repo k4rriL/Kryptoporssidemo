@@ -83,15 +83,18 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       var volume = parseInt(data[1]["value"])
 
       //get users my_offers
-      $http.get('/api/my_offers/' + stockPage.current_user_id).then(
+      var query = '/api/my_offers/' + stockPage.current_user_id;
+      $http.get(query).then(
         function successCallback(response){
-          console.log(response.data);
           var current = response.data.offers;
           var total_volume = 0;
+          for (i = 0; i < current.length; i++){
+            total_volume += current[i].volume;
+          }
+          total_volume += volume;
 
-
-          if (volume > stockPage.current_user_stocks[symbol].volume || volume < 0){
-            $("#sell-offer-warning").html("You don't have that many stocks");
+          if (total_volume > stockPage.current_user_stocks[symbol].volume || volume < 0){
+            $("#sell-offer-warning").html("You can't sell that many stocks");
             $("#sell-offer-warning").show();
           } else {
             $("#sell-offer-warning").hide();
@@ -410,34 +413,61 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
     $('#page-mask').hide();
   }
 
+  $scope.cancelYourOffer = function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    var id = $(event.target).attr('href');
+    console.log(id);
+    var query = '/api/close/' + id;
+    $http.get(query).then(
+      function successCallback(response){
+
+      }, function errorCallback(response){}
+    );
+  }
+
   $scope.sendBuyOffer = function (event) {
     event.preventDefault();
     var data = $('#make_buy_offer_form').serializeArray();
     var volume = parseInt(data[1]["value"]);
     var price = parseFloat(data[2]["value"]);
-    if (price * volume > localStorageService.get("currentUserBalance")) {
-      $("#buy-offer-warning").html("You don't have enough balance on your account to make that offer");
-      $("#buy-offer-warning").show();
-    } else {
-      $("#buy-offer-warning").hide();
-      var post_data = {
-        "symbol": data[0]["value"],
-        "buy_sell": true,
-        "price": price,
-        "volume": volume,
-        "user_id": localStorageService.get('currentUser'),
-        "offer_id": new Date().getTime()
-      }
-      $http.post('/api/stocks', post_data).then(
-        function successCallback(response) {
-          $scope.updateOffers();
-          $scope.makingBuyOffer = false;
-          $('#page-mask').hide();
-        }, function errorCallback(response){
-          console.log(response);
+    var query = '/api/my_offers/' + localStorageService.get('currentUser');
+    $http.get(query).then(
+      function successCallback(response){
+        var offers = response.data.bids;
+        var total_price = 0;
+        for (i = 0; i < offers.length; i++){
+          total_price += offers[i].price * offers[i].volume;
         }
-      );
-    }
+
+        total_price += price * volume;
+
+        if (total_price > localStorageService.get("currentUserBalance")) {
+          $("#buy-offer-warning").html("You don't have enough balance on your account to make that offer");
+          $("#buy-offer-warning").show();
+        } else {
+          $("#buy-offer-warning").hide();
+          var post_data = {
+            "symbol": data[0]["value"],
+            "buy_sell": true,
+            "price": price,
+            "volume": volume,
+            "user_id": localStorageService.get('currentUser'),
+            "offer_id": new Date().getTime()
+          }
+          $http.post('/api/stocks', post_data).then(
+            function successCallback(response) {
+              $scope.updateOffers();
+              $scope.makingBuyOffer = false;
+              $('#page-mask').hide();
+            }, function errorCallback(response){
+              console.log(response);
+            }
+          );
+        }
+      }, function errorCallback(response){}
+    );
   }
 });
 
