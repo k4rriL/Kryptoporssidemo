@@ -1,6 +1,6 @@
 'use strict';
 var CryptoJS = require("crypto-js");
-
+var request = require("request");
 
 // A single block in blockchain
 class Block {
@@ -45,6 +45,21 @@ var calculateHashForBlock = (block) => {
 var addBlock = (newBlock) => {
     if(isValidNewBlock(newBlock, getLatestBlock())) {
         blockchain.push(newBlock);
+    }
+};
+
+var postBlock = (newBlock, route) => {
+    if (global.list != null) {
+        for (var i = 0; i < global.list.length; i++) {
+            if (global.list[i].port != global.port) {
+                request({
+                    url: "http://" + global.list[i].ip + ":" + global.list[i].port + route,
+                    method: "POST",
+                    json: true,
+                    body: newBlock
+                }, function (error, response, body){});
+            }
+        }
     }
 };
 
@@ -97,3 +112,4 @@ module.exports.replaceChain = replaceChain;
 module.exports.addBlock = addBlock;
 module.exports.blockchain = blockchain;
 module.exports.generateNextBlock = generateNextBlock;
+module.exports.postBlock = postBlock;

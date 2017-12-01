@@ -1,7 +1,7 @@
 var express = require('express');
 var bc = require('./blockchain.js');
 var app = express();
-var port = process.env.PORT || 5000;
+global.port = process.env.PORT || 5000;
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
@@ -24,19 +24,16 @@ app.get('/*', function(req, res) {
 app.listen(port);
 console.log("App listening on port " + port);
 
-var list = [];
+global.list = [];
 
 var options = {
-    url: 'http://10.100.61.5:5005/add_new',
+    url: 'http://localhost:5005/add_new',
     method: 'POST',
     form: {'ip': ip.address(), 'port': port}
 }
 
 request(options, function(error, response, body) {
     if (!error && response.statusCode == 200) {
-        //console.log(body)
         list = JSON.parse(body).addressList;
-        console.log(list);
     }
 })
-

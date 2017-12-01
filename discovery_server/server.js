@@ -37,17 +37,27 @@ global.list = [];
 
 app.post('/add_new', function(req,res) {
     if(req.body.ip != null && req.body.port != null) {
-        if(list.indexOf({"ip":req.body.ip, "port":req.body.port}) == -1) {
+        if( !contains(list, req.body.port)) {
             list.push({"ip": req.body.ip, "port":req.body.port});
             console.log(list);
             res.send({"addressList": list,"status": 200});
         } else {
-            res.send({"addressList": list, "status": 200, "message": "Port allready existed in the discovery server list"})
+            res.send({"addressList": list, "status": 200, "message": "Port already existed in the discovery server list"})
         }
     } else {
         res.send({"status": 400, "message": "Ip or port is not defined in request body"})
     }
 })
+
+var contains = function(list, port) {
+    var bool = false;
+    for (i = 0; i < list.length; i++) {
+        if(list[i].port === port){
+            bool = true;
+        }
+    }
+    return bool;
+}
 
 //palauta lista
 app.get('/get_list', function(req, res) {
@@ -60,7 +70,7 @@ app.post('/change_balance', function(req, res) {
   var new_balance = 0;
   for (var i = 0; i < user_data.length; i++) {
     if (user_id == user_data[i].user_id){
-      user_data[i].balance += amount;
+      user_data[i].balance = Math.round((user_data[i].balance + amount) * 100) / 100;
       new_balance = user_data[i].balance;
     }
   }
