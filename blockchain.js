@@ -57,19 +57,14 @@ var postBlock = (newBlock, route) => {
         method: 'GET',
         form: {'ip': ip.address(), 'port': global.port}
     };
-    console.log("POSTING LIST ###################")
     request(options, function(error, response, body) {
-        console.log(error)
-        console.log(response.statusCode)
         if (!error && response.statusCode == 200) {
-            console.log("Got here")
             global.list = JSON.parse(body).addressList;
             console.log("sending block");
             console.log(global.list);
             if (global.list != null) {
                 for (var i = 0; i < global.list.length; i++) {
                     if (global.list[i].port != global.port) {
-                      console.log("asd" + global.port);
                         request({
                             url: "http://" + global.list[i].ip + ":" + global.list[i].port + route,
                             method: "POST",
