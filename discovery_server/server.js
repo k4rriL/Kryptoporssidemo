@@ -35,6 +35,7 @@ app.use(function (req, res, next) {
 
 global.list = [];
 
+//Add new client to the list of the server
 app.post('/add_new', function(req,res) {
     if(req.body.ip != null && req.body.port != null) {
         if( !contains(list, req.body.port)) {
@@ -59,11 +60,12 @@ var contains = function(list, port) {
     return bool;
 }
 
-//palauta lista
+//return list of all clients
 app.get('/get_list', function(req, res) {
     res.send({"addressList":list});
 });
 
+//Change the account balance of a user and return the new balance
 app.post('/change_balance', function(req, res) {
   var user_id = req.body.user_id;
   var amount = req.body.amount;

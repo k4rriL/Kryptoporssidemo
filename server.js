@@ -26,6 +26,7 @@ console.log("App listening on port " + port);
 
 global.list = [];
 
+//Get the list of other client from discovery server
 var options = {
     url: 'http://localhost:5005/add_new',
     method: 'POST',

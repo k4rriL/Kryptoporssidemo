@@ -41,6 +41,23 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       );
     }
 
+    stockPage.updateUserBalance = function (user_id, amount) {
+      var query = 'http://localhost:5005/change_balance';
+      var data = {
+        "user_id": user_id,
+        "amount": amount
+      }
+      $http.post(query, data).then(
+        function successCallback(response) {
+          if (response.data.status == 200){
+            if (stockPage.localStorageService.get(stockPage.port  + '.currentUser') == user_id){
+                stockPage.localStorageService.set(stockPage.port  + '.currentUserBalance', response.data.new_balance);
+            }
+          }
+        }, function errorCallback(error){}
+      );
+    }
+
     $http.get('/api/stocks_all').then(
       function successCallback(response) {
         stocks = response.data;
@@ -57,6 +74,7 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       stockPage.logged_in = true;
       stockPage.currentUserBalance = localStorageService.get(stockPage.port +'.currentUserBalance');
       stockPage.updateUserStocks();
+      stockPage.updateUserBalance(stockPage.current_user_id, 0);
     } else {
       stockPage.logged_in = false;
     }
@@ -84,6 +102,8 @@ var cryptoExchange = angular.module('cryptoExchange', ['ngRoute', 'LocalStorageM
       var query = '/api/my_offers/' + stockPage.current_user_id;
       $http.get(query).then(
         function successCallback(response){
+
+          //Check that user doesn't create too many sell offers
           var current = response.data.offers;
           var total_volume = 0;
           for (i = 0; i < current.length; i++){
@@ -246,7 +266,6 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
       }, function errorResponse(error){}
     );
   }
-  $scope.updateOffers();
 
   $scope.updateUserBalance = function (user_id, amount) {
     var query = 'http://localhost:5005/change_balance';
@@ -264,6 +283,9 @@ cryptoExchange.controller('stockPageController', function($scope, $routeParams, 
       }, function errorCallback(error){}
     );
   }
+
+  $scope.updateOffers();
+  $scope.updateUserBalance($scope.localStorageService.get($scope.port  + '.currentUser'), 0.0);
 
   $scope.buyingStock = function (event) {
     event.preventDefault();

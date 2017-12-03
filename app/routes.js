@@ -115,6 +115,12 @@ module.exports = function(app) {
         res.sendStatus(200);
     });
 
+    // Does exactly the same as up, but does not post block to everyone
+    app.post('/api/stocks/recieve', function(req, res) {
+        bc.addNewBlock(req.body);
+        res.sendStatus(200);
+    });
+
     // GET, closes offer
     app.get('/api/close/:offer_id', function(req, res) {
         var offer_id = parseInt(req.params.offer_id, 10);
@@ -122,12 +128,6 @@ module.exports = function(app) {
         bc.addNewBlock(close);
         bc.postBlock(close, '/api/stocks/recieve')
         res.send("Offer " + offer_id + " closed");
-    });
-
-    // Does exactly the same as up, but does not post block to everyone
-    app.post('/api/stocks/recieve', function(req, res) {
-        bc.addNewBlock(req.body);
-        res.sendStatus(200);
     });
 
     // GET Buy/Sell for stock
@@ -193,6 +193,7 @@ module.exports = function(app) {
         res.send({bids: bids, offers: offers});
     });
 
+    //Get the current offers of a user
     app.get('/api/my_offers/:user_id', function(req, res) {
         var user_id = req.params.user_id;
         var bids = [];
@@ -316,6 +317,8 @@ module.exports = function(app) {
         res.send(portfolio);
     });
 
+    //Add a stock of new type to blockchain by creating a transaction from dummy
+    //user to the user that added the stocks
     app.post('/api/add_stock', function(req, res) {
         var dummy_user_id = "company";
         var block = {
@@ -339,9 +342,7 @@ module.exports = function(app) {
         res.sendStatus(200);
     });
 
-
-
-
+    //Define the starting data
     function fillWithData() {
         // Order Book test data
         var nok1 = {id: 1, symbol: "NOK", buy_sell: true, price: 5.6, volume: 10000, user_id: "abcde9",
