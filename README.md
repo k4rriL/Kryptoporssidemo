@@ -13,6 +13,30 @@ Clientit on hyvin yksinkertaisia lohkoketjun luojia.
 
 Clientille UI
 
+## Käyttöohjeet ##
+
+1.	Lataa ja asenna Node.js alusta https://nodejs.org/en/ 
+2.	Lataa ohjelma Aalto Version palvelusta: 
+https://version.aalto.fi/gitlab/lehtirk1/SCI24-kryptoporssidemo/repository/master/archive.zip 
+3.	Pura lataamasi tiedosto haluamaasi kansioon
+4.	Navigoi komentorivillä purkamaasi kansioon (kansiossa esimerkiksi tiedosto README.md)
+5.	Suorita komento npm install
+6.	Siirry kansioon discovery_server
+7.	Käynnistä discovery server komennolla node server
+Tässä vaiheessa sinun kannattaa luoda useampi komentorivi-ikkuna, jotta voit 
+simuloida usean käyttäjän samanaikaista käyttöä. Seuraavat ohjeet voi suorittaa 
+niin monta kertaa kuin haluaa eri komentorivi-ikkunoissa.
+8.	Siirry takaisin kansioon, jossa suoritettiin ”npm install” komento
+9.	Suorita komento env PORT=9000 node server (käytä jokaisessa 
+komentorivi-ikkunassa eri lukuarvoa)
+10.	Nyt pystyt avaamaan selaimen osoitteeseen http://localhost:9000 
+(tai vastaava toinen lukuarvo minkä asetit ohjelmalle kohdassa 9), 
+jolloin sinun pitäisi nähdä StockChainin etusivu.
+11.	 Pystyt kirjautumaan sisään käyttämällä testikäyttäjiä (testuser, testuser2, 
+testuser3, testuser4). Kaikkien salasana on ”password”.
+
+
+
 ## Routes ##
 
 **GET /api/stocks** : returns all blocks
