@@ -5,7 +5,7 @@ SCI-C1000 - SCI-Projektikurssi
 
 ## Suunnitelma ##
 
-Tehdään tosi simppeli keksusteluserveri joka pistetään localhostiin pyörii.
+Simppeli keskusteluserveri, jonka kautta clientit löytävät toisensa.
 
 Clientit yhdistää serveriin ja saa sieltä tiedon minne lähettää lohkoja.
 
